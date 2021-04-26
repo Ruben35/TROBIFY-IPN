@@ -1,8 +1,8 @@
-
 const {response} = require('express');
 const conn = require('../bd');
 const bcrypt = require('bcryptjs');
 const { generarJWT} = require('../helpers/jwt');
+const uniqid = require('uniqid');
 
 
 const login = async(req,res = response ) =>{
@@ -38,7 +38,7 @@ const login = async(req,res = response ) =>{
         else{
 
             //generamos el json web Token
-             const token = await generarJWT();
+             const token = await generarJWT(correo,nombre);
              //devolvemos respuesta
              return res.json({
                  ok:true,
@@ -48,20 +48,47 @@ const login = async(req,res = response ) =>{
              })
         }
 
-
-
-
-
     }
-
    
- 
 }
-
 
 const registrar = async(req,res = response) =>{
 
+
     const {nombre,appaterno,apmaterno,correo,contrasena} = req.body;
+    const {path} = req.file;
+    const idImag = uniqid('usr-');
+
+    try {
+
+        let r = await conn.query('select nombre from cliente where correo =?',[correo]);
+
+        if(Object.keys(r).length !=0){
+            return res.json({
+                ok:false,
+                msg:'El correo ya ha sido registrado!'
+
+            })
+        }
+
+       
+        const newImg ={
+            idimagen:idImag,
+            path:path
+        };
+        conn.query('insert into imagenes set?',[newImg])
+        
+    } catch (error) {
+
+        return res.json({
+            ok:false,
+            msg:'ocurrio un error'
+        })
+        
+    }
+
+    
+
 
     let r = await conn.query('select nombre from cliente where correo =?',[correo]);
 
@@ -80,8 +107,8 @@ const registrar = async(req,res = response) =>{
         const nuevaContra =  await bcrypt.hashSync(contrasena,salt);
 
         //generar su jwt
-        const token = generarJWT(correo,nombre);
-
+        const token = await generarJWT(correo,nombre);
+    
         //preparar la data a insertar
 
         const nuevo = {
@@ -90,7 +117,7 @@ const registrar = async(req,res = response) =>{
             appaterno:appaterno,
             apmaterno:apmaterno,
             correo:correo,
-            imagenes_idimagen:1
+            imagenes_idimagen:idImag
         }
 
         //insertar
@@ -102,13 +129,7 @@ const registrar = async(req,res = response) =>{
             msg:'registro exitoso'
         })
 
-       
-       
-
     }
-
-
-
 
 }
 
