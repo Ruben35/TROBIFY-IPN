@@ -29,7 +29,7 @@ const login = async(req,res = response ) =>{
         const validar = bcrypt.compareSync(contrasena,password);
 
         if(!validar){
-            return res.json({
+            return res.status(400).json({
                 ok:false,
                 msg:'¡correo o contraseña incorrectos!'
             })
@@ -40,7 +40,7 @@ const login = async(req,res = response ) =>{
             //generamos el json web Token
              const token = await generarJWT(correo,nombre);
              //devolvemos respuesta
-             return res.json({
+             return res.status(200).json({
                  ok:true,
                  nombre,
                  correo,
@@ -64,7 +64,7 @@ const registrar = async(req,res = response) =>{
         let r = await conn.query('select nombre from cliente where correo =?',[correo]);
 
         if(Object.keys(r).length !=0){
-            return res.json({
+            return res.status(400).json({
                 ok:false,
                 msg:'El correo ya ha sido registrado!'
 
@@ -80,7 +80,7 @@ const registrar = async(req,res = response) =>{
         
     } catch (error) {
 
-        return res.json({
+        return res.status(200).json({
             ok:false,
             msg:'ocurrio un error'
         })
@@ -93,7 +93,7 @@ const registrar = async(req,res = response) =>{
     let r = await conn.query('select nombre from cliente where correo =?',[correo]);
 
     if(Object.keys(r).length !=0){
-        return res.json({
+        return res.status(400).json({
             ok:false,
             msg:'El correo ya ha sido registrado!'
 
@@ -123,7 +123,7 @@ const registrar = async(req,res = response) =>{
         //insertar
         await conn.query('insert into cliente set?',[nuevo]);
 
-        return res.json({
+        return res.status(200).json({
             ok:true,
             token:token,
             msg:'registro exitoso'

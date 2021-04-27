@@ -3,6 +3,8 @@ const conn = require('../bd');
 
 const getAllInmuebles  = async(req,res = response) =>{
 
+    try {
+
     const respuesta = await conn.query('call getInmobiliarios();');
     const data = respuesta[0];
 
@@ -33,12 +35,25 @@ const getAllInmuebles  = async(req,res = response) =>{
 
     }
 
-    return res.send(data);
+    return res.status(200).send(data);
+        
+    } catch (error) {
+
+        return res.status(500).json({
+            ok:false,
+            msg: 'error al cargar inmuebles'
+        })
+        
+    }
+
+   
 }
 
 const inmueblesCliente = async(req,res = response) =>{
 
     const correo  = req.params.correo;
+
+    try {
 
     const inmcliente = [];
 
@@ -75,7 +90,17 @@ const inmueblesCliente = async(req,res = response) =>{
     }
 
 
-    return res.send(inmcliente);
+    return res.status(200).send(inmcliente);
+        
+    } catch (error) {
+        return res.status(500).json({
+            ok:true,
+            msg: 'error al cargar inmuebles'
+        })
+        
+    }
+
+    
     
 }
 
@@ -115,7 +140,7 @@ const inmueblesAgencia = async(req,res = response) =>{
     }
 
 
-    return res.send(inmcliente);
+    return res.status(200).send(inmcliente);
 
 }
 
