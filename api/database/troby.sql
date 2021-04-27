@@ -197,17 +197,17 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `troby`.`oferta_agencias` (
   `inmueble_idinmueble` VARCHAR(45) NOT NULL,
-  `cliente_correo` VARCHAR(64) NOT NULL,
+  `agencia_correo` VARCHAR(64) NOT NULL,
   INDEX `fk_oferta_inmobiliaria_inmueble1_idx` (`inmueble_idinmueble` ASC) VISIBLE,
-  INDEX `fk_oferta_inmobiliaria_cliente1_idx` (`cliente_correo` ASC) VISIBLE,
+  INDEX `fk_oferta_agencias_agencia1_idx` (`agencia_correo` ASC) VISIBLE,
   CONSTRAINT `fk_oferta_inmobiliaria_inmueble1`
     FOREIGN KEY (`inmueble_idinmueble`)
     REFERENCES `troby`.`inmueble` (`idinmueble`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_oferta_inmobiliaria_cliente1`
-    FOREIGN KEY (`cliente_correo`)
-    REFERENCES `troby`.`cliente` (`correo`)
+  CONSTRAINT `fk_oferta_agencias_agencia1`
+    FOREIGN KEY (`agencia_correo`)
+    REFERENCES `troby`.`agencia` (`correo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `troby`.`notificaciones` (
   `idnotificaciones` INT NOT NULL AUTO_INCREMENT,
   `descripcion` VARCHAR(100) NOT NULL,
   `url` VARCHAR(60) NOT NULL,
-  `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `fecha` DATETIME NOT NULL,
   PRIMARY KEY (`idnotificaciones`))
 ENGINE = InnoDB;
 
