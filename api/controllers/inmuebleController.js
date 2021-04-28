@@ -144,11 +144,18 @@ const inmueblesAgencia = async(req,res = response) =>{
 
 }
 
+const inmuebleUnitario = async(req, res = response) => {
+    const inmueble_id = req.body.inmueble_id;
+    const obj_inmueble = await conn.query('SELECT * FROM inmueble WHERE idinmueble = ?;', [inmueble_id])
+    return res.status(200).send(obj_inmueble);
+}
+
 
 module.exports = {
 
     getAllInmuebles,
     inmueblesCliente,
-    inmueblesAgencia
+    inmueblesAgencia,
+    inmuebleUnitario
     
 }
