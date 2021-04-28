@@ -1,0 +1,44 @@
+.hero_image{
+    position: relative;
+    height: 80vh;
+    overflow: hidden;
+    background-size: cover;
+    opacity: 85%;
+    display: flex;
+    align-items: center;
+}
+
+.hero_container{
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    user-select: none;
+}
+
+.hero_image:hover{
+    background-color: aliceblue;
+}
+
+/* @keyframes image_roulette {
+    0%{
+        background: url(../assets/img/landing/carrusel1.jpg) no-repeat center;
+        background-size: cover;
+        opacity: 85%;
+    }
+    33%{
+        background: url(../assets/img/landing/carrusel2.jpg) no-repeat center;
+        background-size: cover;
+        opacity: 85%;
+    }
+    66%{
+        background: url(../assets/img/landing/carrusel3.jpg) no-repeat center;
+        background-size: cover;
+        opacity: 85%;
+    }
+    100%{
+        background: url(../assets/img/landing/carrusel4.jpg) no-repeat center;
+        background-size: cover;
+        opacity: 85%;
+    }
+} */
+

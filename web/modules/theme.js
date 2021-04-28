@@ -42,7 +42,7 @@ const theme = {
     ...rawTheme.palette,
     background: {
       ...rawTheme.palette.background,
-      default: rawTheme.palette.primary.light,
+      default: grey[100],
       placeholder: grey[200],
     },
   }
