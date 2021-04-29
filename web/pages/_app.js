@@ -6,6 +6,8 @@ import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../modules/theme'
 import Head from 'next/head'
+import PropTypes from 'prop-types';
+
 
 function MyApp({ Component, pageProps }) {
 
@@ -35,5 +37,10 @@ function MyApp({ Component, pageProps }) {
   );
   
 }
+
+MyApp.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  pageProps: PropTypes.object.isRequired,
+};
 
 export default MyApp

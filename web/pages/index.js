@@ -44,18 +44,6 @@ export default function Home() {
         <Image src="/img/landing/map.svg" width={2} height={1} layout='responsive' className={styles.whatIsSection_Image}/>
         </Paper>
       </Container>
-      <Container maxWidth="md" className={styles.whatIsSection}>
-        <Typography variant="h4" color="initial" className={styles.whatIsSection_question}>
-          ¿Cómo funciona?
-        </Typography>
-        <Paper elevation={3} className={styles.whatIsSection_Paper}>
-          <Typography variant="body1" color="initial" >
-            Si quieres comprar/alquilar/vender un inmueble lo único que tienes que hacer es registrarte en Trobify-IPN y podrás comenzar
-            a acceder a inmuebles de distintos lugares ofertados por personas o agencias inmobiliarias.
-          </Typography>
-        <Image src="/img/landing/map.svg" width={2} height={1} layout='responsive' className={styles.whatIsSection_Image}/>
-        </Paper>
-      </Container>
       <Typography variant="h3" color="secondary" className={styles.whatIsSection_questionCenter}>
           ¿Qué esperas para registrarte?
       </Typography>
@@ -82,7 +70,6 @@ const Hero = () =>{
         setIndex(index => index+1);
         setActualImg(`/img/landing/carrusel${index+1}.jpg`);
       }
-      console.log(index);
     }, 10000);
     return () => clearInterval(interval);
   }, [index]);
