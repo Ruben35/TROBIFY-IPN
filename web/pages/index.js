@@ -1,10 +1,12 @@
 import Head from 'next/head'
 import Container from '@material-ui/core/Container'
 import Button from '@material-ui/core/Button'
-import { Typography } from '@material-ui/core'
+import { Typography, ButtonGroup } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper';
 import styles from '../styles/landing.module.css'
 import React, {useState, useEffect} from 'react';
+import Image from 'next/image'
+import Box from '@material-ui/core/Box'
 
 export default function Home() {
   return (
@@ -21,14 +23,48 @@ export default function Home() {
       <Hero></Hero>
       <Container maxWidth="md" className={styles.whatIsSection}>
         <Typography variant="h4" color="initial" className={styles.whatIsSection_question}>
-          ¿Qué es Trobify?
+          ¿Qué es Trobify-IPN?
         </Typography>
-        <Paper elevation={3}>
-          <Typography variant="body1" color="initial" className={styles.whatIsSection_Paper}>
-            Trobify es el lugar perfecto para que puedas realizar la compra/venta/alquiler de cualquier inmueble. 
+        <Paper elevation={3} className={styles.whatIsSection_Paper}>
+          <Typography variant="body1" color="initial" >
+            Trobify-IPN es el lugar perfecto para que puedas realizar la compra/venta/alquiler de cualquier inmueble. 
           </Typography>
+        <Image src="/img/landing/for_sale_house.svg" width={2} height={1} layout='responsive' className={styles.whatIsSection_Image}/>
         </Paper>
       </Container>
+      <Container maxWidth="md" className={styles.whatIsSection}>
+        <Typography variant="h4" color="initial" className={styles.whatIsSection_question}>
+          ¿Cómo funciona?
+        </Typography>
+        <Paper elevation={3} className={styles.whatIsSection_Paper}>
+          <Typography variant="body1" color="initial" >
+            Si quieres comprar/alquilar/vender un inmueble lo único que tienes que hacer es registrarte en Trobify-IPN y podrás comenzar
+            a acceder a inmuebles de distintos lugares ofertados por personas o agencias inmobiliarias.
+          </Typography>
+        <Image src="/img/landing/map.svg" width={2} height={1} layout='responsive' className={styles.whatIsSection_Image}/>
+        </Paper>
+      </Container>
+      <Container maxWidth="md" className={styles.whatIsSection}>
+        <Typography variant="h4" color="initial" className={styles.whatIsSection_question}>
+          ¿Cómo funciona?
+        </Typography>
+        <Paper elevation={3} className={styles.whatIsSection_Paper}>
+          <Typography variant="body1" color="initial" >
+            Si quieres comprar/alquilar/vender un inmueble lo único que tienes que hacer es registrarte en Trobify-IPN y podrás comenzar
+            a acceder a inmuebles de distintos lugares ofertados por personas o agencias inmobiliarias.
+          </Typography>
+        <Image src="/img/landing/map.svg" width={2} height={1} layout='responsive' className={styles.whatIsSection_Image}/>
+        </Paper>
+      </Container>
+      <Typography variant="h3" color="secondary" className={styles.whatIsSection_questionCenter}>
+          ¿Qué esperas para registrarte?
+      </Typography>
+      <Container maxWidth="xs" className={styles.imageContainer}><Image src="/img/landing/building.svg" width={1} height={1} layout='responsive' />
+      </Container>
+        <Box display="flex" justifyContent="center" flexWrap="wrap" mb={8}>
+          <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
+          <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
+        </Box>
     </>
   )
 }
@@ -47,7 +83,7 @@ const Hero = () =>{
         setActualImg(`/img/landing/carrusel${index+1}.jpg`);
       }
       console.log(index);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [index]);
 
