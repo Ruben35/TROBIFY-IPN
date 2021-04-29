@@ -16,6 +16,7 @@ a {
 .navbar-title{
   flex-grow: 1;
   user-select: none;
+  cursor: pointer;
 }
 
 .navbar-button{

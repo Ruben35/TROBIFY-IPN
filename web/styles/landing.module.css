@@ -1,11 +1,16 @@
 .hero_image{
     position: relative;
-    height: 80vh;
+    height: 100vh;
     overflow: hidden;
+    opacity: 100%;
     background-size: cover;
-    opacity: 85%;
     display: flex;
     align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    -webkit-transition: background-image 2s ease-in-out;
+    transition: background-image 2s ease-in-out;
+    margin-bottom: 20px;
 }
 
 .hero_container{
@@ -19,26 +24,20 @@
     background-color: aliceblue;
 }
 
-/* @keyframes image_roulette {
-    0%{
-        background: url(../assets/img/landing/carrusel1.jpg) no-repeat center;
-        background-size: cover;
-        opacity: 85%;
-    }
-    33%{
-        background: url(../assets/img/landing/carrusel2.jpg) no-repeat center;
-        background-size: cover;
-        opacity: 85%;
-    }
-    66%{
-        background: url(../assets/img/landing/carrusel3.jpg) no-repeat center;
-        background-size: cover;
-        opacity: 85%;
-    }
-    100%{
-        background: url(../assets/img/landing/carrusel4.jpg) no-repeat center;
-        background-size: cover;
-        opacity: 85%;
-    }
-} */
+.hero_callToAction{
+    margin-top: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
 
+.whatIsSection{
+    min-height: 400px;
+}
+.whatIsSection_question{
+    margin-left: 20px;
+}
+
+.whatIsSection_Paper{
+    margin-top: 20px;
+    padding: 30px;
+}
