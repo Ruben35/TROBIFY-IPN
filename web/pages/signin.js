@@ -12,7 +12,7 @@ export default function SignIn(){
                     Trobify: Sign In
                 </title>
             </Head>
-            {/* <Box minHeight="64px"></Box> */}
+            <Box minHeight="64px"></Box>
             <SignInSide></SignInSide>
         </>
     );
