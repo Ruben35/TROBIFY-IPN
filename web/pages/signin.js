@@ -1,4 +1,3 @@
-import styles from '../styles/signin.module.css';
 import Head from 'next/head'
 import { Box } from '@material-ui/core';
 import SignInSide from '../components/modules/SignInSide'

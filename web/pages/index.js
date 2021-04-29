@@ -59,7 +59,7 @@ export default function Home() {
 
 const Hero = () =>{
   const [index, setIndex]= useState(0);
-  const [actualImg, setActualImg] = useState("/img/landing/carrusel0.jpg");
+  const [actualImg, setActualImg] = useState("/img/landing/carrusel00.jpg");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -83,11 +83,11 @@ const Hero = () =>{
             backgroundSize:'cover',
             }}>
         <Container maxWidth="xs" className={styles.hero_container}>
-          <Typography variant="h3" color='primary'>
+          <Typography variant="h3" color='secondary'>
             Trobify-IPN
           </Typography>
           <Typography variant="h4">
-            El lugar perfecto para buscar el perfecto inmueble.
+            El lugar perfecto para buscar el inmueble perfecto.
           </Typography>
         </Container>
           <Button variant="contained" className={styles.hero_callToAction} color="primary">
