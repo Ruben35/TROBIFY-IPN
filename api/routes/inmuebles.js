@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/inmuebles',getAllInmuebles);
 router.get('/inmueblesCliente/:correo',inmueblesCliente);
 router.get('/inmueblesAgencia/:correo',inmueblesAgencia);
-router.get('/buscar/:inmueble_id', inmuebleUnitario);
+router.get('', inmuebleUnitario); // ?inmueble_id=1
 
 
 module.exports = router
