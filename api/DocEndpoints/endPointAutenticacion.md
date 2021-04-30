@@ -71,15 +71,14 @@ Si todo sale correcto mandamos los siguentes datos en un JSON:
 * booleano
 * token
 * msg : string
-
+</p>
 ejemplo de respuesta:
 
-{
-    "ok": true,
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3JyZW8iOiJydW5tYXJhNjlAZ21haWwuY29tIiwibm9tYnJlIjoiSm9yZ2UiLCJpYXQiOjE2MTk0OTM2MzEsImV4cCI6MTYxOTUzNjgzMX0.NiiL9Y7t7EWY0vNuLKMkHrLTUtBm7uzSWie16Gd3VUk",
-    "msg": "registro exitoso"
-}
+![Screenshot](respuesta.png)
+
+<p>Una vez realizado el registro llega el correo al cliente</p>
+
+![Screenshot](correo.png)
 
 
 
-</p>

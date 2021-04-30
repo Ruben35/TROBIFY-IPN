@@ -20,7 +20,9 @@ const registrar  = async(req, res = response) => {
     conn.query(sql, interesadoObj, error => {
         if(error) throw error;
         res.send('Interesado registrado');
-    });
+    }); 
+
+
 
     
 }
