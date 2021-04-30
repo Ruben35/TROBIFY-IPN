@@ -71,8 +71,15 @@ Si todo sale correcto mandamos los siguentes datos en un JSON:
 * booleano
 * token
 * msg : string
+
 </p>
-ejemplo de respuesta:
+
+<p> ejemplo de respuesta del servidor</p>
+
+![Screenshot](resjson.png)
+
+
+<p> Ejemplo de respuesta: </p>
 
 ![Screenshot](respuesta.png)
 
