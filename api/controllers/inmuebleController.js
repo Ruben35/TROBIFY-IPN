@@ -145,8 +145,79 @@ const inmueblesAgencia = async(req,res = response) =>{
 }
 
 const inmuebleUnitario = async(req, res = response) => {
-    const inmueble_id = req.body.inmueble_id;
+    const inmueble_id = req.query.inmueble_id;
     const obj_inmueble = await conn.query('SELECT * FROM inmueble WHERE idinmueble = ?;', [inmueble_id])
+    return res.status(200).send(obj_inmueble);
+}
+
+// BUSQUEDA
+/*
+ * Filtros:
+ * Precio (Rango)
+ * Ubicación (Lugar) -- FALTA
+ * Propietario
+ * 
+ * Busqueda en:
+ * Descripción, Título
+ */
+const getInmuebles = async(req, res = response) => {
+    // Filtros
+    //const lugar = "Mexico";//req.params.lugar;a
+    const propietario = req.params.propietario;
+    
+    const precio_inf = parseFloat(req.query.precio_inf);
+    const precio_sup = parseFloat(req.query.precio_sup);
+
+    // Texto a buscar
+    var busqueda = req.params.texto;
+    
+    // Pagina
+    const page = parseInt(req.params.page);
+
+    var query = "SELECT ";
+    const params = "inmueble.idinmueble, titulo, descripcion, precio, propietario, imagenes_idimagen";
+    const inner_join = " INNER JOIN imagenes_inmueble ON (inmueble.idinmueble = imagenes_inmueble.inmueble_idinmueble)";
+
+    query= query.concat(params, " FROM inmueble", inner_join);
+
+    var where = "";
+    var variables = [];
+    if(busqueda != "*") {
+        where = " WHERE (titulo LIKE ? OR descripcion LIKE ?)"; // busqueda, busqueda
+        busqueda = "%" + busqueda + "%";
+        variables = variables.concat([busqueda, busqueda]);
+    }else {
+        busqueda = "";
+    }
+    // FILTROS
+    var parametro = "";
+    
+    if(propietario != "*") {
+        parametro = "propietario = ?"; // propietario
+        if(where == "") {
+            parametro = " WHERE " + parametro;
+        }else {
+            parametro = " AND " + parametro;
+        }
+        variables = variables.concat([propietario]);
+    }
+    
+    if((!isNaN(precio_inf) & !isNaN(precio_sup)) & (precio_inf != null & precio_sup != null)) {
+        if(where == "") {
+            parametro = " WHERE ";
+        }else {
+            parametro = parametro + " AND ";
+        }
+        parametro = parametro + "precio BETWEEN ? AND ?"; // precio_inf, precio_sup
+        variables = variables.concat([precio_inf, precio_sup]);
+    }
+    // where + parametro
+    const limit= " LIMIT ?, 10;"; // page
+    variables = variables.concat([page]);
+
+    console.log(query + where + parametro + limit);
+    const obj_inmueble = await conn.query(query + where + parametro + limit, variables)
+
     return res.status(200).send(obj_inmueble);
 }
 
@@ -156,6 +227,7 @@ module.exports = {
     getAllInmuebles,
     inmueblesCliente,
     inmueblesAgencia,
-    inmuebleUnitario
+    inmuebleUnitario,
+    getInmuebles
     
 }
