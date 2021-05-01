@@ -17,6 +17,7 @@ return res.status(500).json({
 
 si todo sale correcto , se responde con un JSON  el cual contiene
 un array de objetos con todos los datos relacionados con los inmuebles
+´´´
 [
     {
         "titulo": "titulo prueba",
@@ -51,6 +52,7 @@ un array de objetos con todos los datos relacionados con los inmuebles
         ]
     }
 ]
+´´´
 </p>
 
 # variantes 
