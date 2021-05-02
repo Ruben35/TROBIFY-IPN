@@ -59,7 +59,7 @@ export default function Home() {
 
 const Hero = () =>{
   const [index, setIndex]= useState(0);
-  const [actualImg, setActualImg] = useState("/img/landing/carrusel00.jpg");
+  const [actualImg, setActualImg] = useState("/img/landing/carrusel0.jpg");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -96,3 +96,4 @@ const Hero = () =>{
       </div>
   );
 }
+
