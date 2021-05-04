@@ -7,6 +7,7 @@ import styles from '../styles/landing.module.css'
 import React, {useState, useEffect} from 'react';
 import Image from 'next/image'
 import Box from '@material-ui/core/Box'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -90,9 +91,11 @@ const Hero = () =>{
             El lugar perfecto para buscar el inmueble perfecto.
           </Typography>
         </Container>
-          <Button variant="contained" className={styles.hero_callToAction} color="primary">
-            <Typography variant="h6">¡Empieza a buscar ya!</Typography>
-          </Button>
+          <Link href='/inmuebles'>
+            <Button variant="contained" className={styles.hero_callToAction} color="primary">
+              <Typography variant="h6">¡Empieza a buscar ya!</Typography>
+            </Button>
+          </Link>
       </div>
   );
 }
