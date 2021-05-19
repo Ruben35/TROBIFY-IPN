@@ -51,7 +51,9 @@ export default function Home() {
       <Container maxWidth="xs" className={styles.imageContainer}><Image src="/img/landing/building.svg" width={1} height={1} layout='responsive' />
       </Container>
         <Box display="flex" justifyContent="center" flexWrap="wrap" mb={8}>
-          <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
+          <Link href="/registro/cliente">
+            <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
+          </Link>
           <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
         </Box>
     </>
