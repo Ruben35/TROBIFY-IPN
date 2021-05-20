@@ -54,7 +54,9 @@ export default function Home() {
           <Link href="/registro/cliente">
             <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
           </Link>
-          <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
+          <Link href="/registro/agencia">
+            <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
+          </Link>
         </Box>
     </>
   )
