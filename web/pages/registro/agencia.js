@@ -117,12 +117,13 @@ const Form = () =>{
                     label="Descripción de empresa"
                     className={classes.txt}
                     multiline
-                    rows={8}
+                    rows={6}
                     rowsMax={10}
                     variant="outlined"
-                    error={isWrong && (description==="" || description.length>500)}
                     onChange={(e)=>{setDescription(e.target.value)}}
-                    helperText={(isWrong && description==="")?"Escriba una descripción de la agencia":((description.length>500)?`${(description.length-500)} caracteres sobre 500`:"")}
+                    error={(description.length>500 || (isWrong && description===""))}
+                    helperText={(description.length>500)?`${(description.length-500)} caracteres sobre 500`:
+                                (isWrong && description==="")?"Escriba una descripción":""}
                     />
                 </Box>
             </Box>
