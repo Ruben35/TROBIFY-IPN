@@ -1,16 +1,22 @@
-import { Button, Container, Divider, Grid, Paper, TextField, Typography } from '@material-ui/core'
+import { Button, Container, Divider, Grid, Paper, TextField, Typography, Snackbar } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert';
 import Box from '@material-ui/core/Box'
 import { useRef, useState } from 'react';
-
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import Head from 'next/head';
+import OkDialog from '../../components/basic/OkDialog';
+import { useRouter } from 'next/router'
 
 
 export default function RegistroCliente() {
 
     return(
         <>
+            <Head>
+                <title>Trobify: Registro Cliente</title>
+            </Head>
             <Box minHeight="64px"></Box>
             <Container maxWidth="md">
                 <Box display="flex" justifyContent="center" alignItems="center" marginTop={2} marginBottom={3}>
@@ -36,9 +42,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Form = () =>{
     const classes = useStyles();
-
-    const [photoName, setPhotoName] = useState("Selecciona imagen...");
-    const [imagePreview, setImagePreview] = useState();
+    const router = useRouter();
+    //Form values
     const photo = useRef();
     const [name, setName] = useState("");
     const [apPat, setApPat] = useState("");
@@ -46,6 +51,13 @@ const Form = () =>{
     const [email, setEmail] = useState("");
     const [pswd, setPswd] = useState(""); 
     const [confPswd,setConfPswd] = useState("");
+    //Aux states
+    const [photoName, setPhotoName] = useState("Selecciona imagen...");
+    const [imagePreview, setImagePreview] = useState();
+    const [isWrong, setIsWrong] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState();
+    const [successDialog, setSuccessDialog] = useState(false);
 
     const changePhotoName= (e) =>{
         e.preventDefault();
@@ -60,15 +72,32 @@ const Form = () =>{
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        var error="";
         var isPhotoNoEmpty=photo.current.files.length!=1;
-        if(photo.current.files.length!=1 && name=="" && apPat=="" && apMat=="" && email=="" && pswd=="" && confPswd==""){
-            error="Seleccione una foto de perfil";
-            alert("Faltan datos \n"+error);
+        if(photo.current.files.length!=1 || name==="" || apPat==="" || apMat==="" || email==="" || pswd==="" || confPswd==="" || pswd!=confPswd){
+            if(photo.current.files.length!=1)
+                setAlertMessage("Selecciona una foto");
+            else
+                setAlertMessage("Datos incompletos")
+            setIsWrong(true);
+            setOpen(true);
+            
         }else{
-            alert("Todo ok")
+            setIsWrong(false);
+            setSuccessDialog(true);
         }
-        
+    }
+
+    const handleAlertClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
+
+    const handleOnOk = () =>{
+        setSuccessDialog(false);
+        router.push("/");
     }
 
     return (
@@ -77,18 +106,19 @@ const Form = () =>{
             <Divider/>
             <Box margin={3}>
                 <Grid container spacing={5} justify="center" >
-                    <Grid item> <TextField variant="outlined" value={name} onChange={(e)=>{setName(e.target.value)}} label="Nombre" helperText="Inserte un nombre" error /></Grid>
-                    <Grid item> <TextField variant="outlined" value={apPat} onChange={(e)=>{setApPat(e.target.value)}} label="Apellido Paterno" /></Grid>
-                    <Grid item> <TextField variant="outlined" value={apMat} onChange={(e)=>{setApMat(e.target.value)}} label="Apellido Materno" /></Grid>
+                    <Grid item> <TextField variant="outlined" error={isWrong && name===""} value={name} onChange={(e)=>{setName(e.target.value)}} label="Nombre" helperText={(isWrong && name==="")?"Escriba su nombre":""} /></Grid>
+                    <Grid item> <TextField variant="outlined" error={isWrong && apPat===""} value={apPat} onChange={(e)=>{setApPat(e.target.value)}} label="Apellido Paterno" helperText={(isWrong && apPat==="")?"Escriba su apellido paterno":""} /></Grid>
+                    <Grid item> <TextField variant="outlined" error={isWrong && apMat===""} value={apMat} onChange={(e)=>{setApMat(e.target.value)}} label="Apellido Materno" helperText={(isWrong && apMat==="")?"Escriba su apelliedo materno":""} /></Grid>
                 </Grid>
             </Box>
             <Typography variant="h5">Datos de Cuenta</Typography>
             <Divider/>
             <Box margin={3}>
                 <Grid container spacing={5} justify="center" >
-                    <Grid item> <TextField type="email" value={email} onChange={(e)=>{setEmail(e.target.value)}} variant="outlined" label="Correo" /></Grid>
-                    <Grid item> <TextField type="password" value={pswd} onChange={(e)=>{setPswd(e.target.value)}} variant="outlined" label="Contraseña" /></Grid>
-                    <Grid item> <TextField type="password" value={confPswd} onChange={(e)=>{setConfPswd(e.target.value)}} variant="outlined"label="Confirmar Contraseña" /></Grid>
+                    <Grid item> <TextField type="email" error={isWrong && email===""} value={email} onChange={(e)=>{setEmail(e.target.value)}} variant="outlined" label="Correo" helperText={(isWrong && email==="")?"Escriba su correo":""} /></Grid>
+                    <Grid item> <TextField type="password" error={isWrong && pswd===""} value={pswd} onChange={(e)=>{setPswd(e.target.value)}} variant="outlined" label="Contraseña" helperText={(isWrong && pswd==="")?"Escriba su contraseña":""} /></Grid>
+                    <Grid item> <TextField type="password" error={isWrong && (confPswd==="" || confPswd != pswd)} value={confPswd} onChange={(e)=>{setConfPswd(e.target.value)}} variant="outlined" label="Confirmar Contraseña" 
+                                helperText={(isWrong && confPswd==="")?"Confirme su contraseña":((isWrong && confPswd!=pswd)?"Las contraseñas no coinciden":"")} /></Grid>
                 </Grid>
                 <Box display="flex" justifyContent="center" alignItems="center" margin={3} flexWrap="wrap">
                     <Box marginRight={1} marginBottom={1}><Typography variant="body1" ><b>Foto de Perfil:</b> {photoName}</Typography></Box>
@@ -114,6 +144,15 @@ const Form = () =>{
                     </Button>
                 </Box>
             </Box>
+            <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{vertical:"bottom", horizontal:"right"}} onClose={handleAlertClose}>
+                <Alert severity="error" variant="filled" onClose={handleAlertClose}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+            <OkDialog open={successDialog} 
+                    title={`¡Registro Exitoso ${name}!`}
+                    message={`Hemos enviado un correo a "${email}" para poder confirmar tu cuenta.`}
+                    onOk={handleOnOk}/>
         </form>     
     );
 }
