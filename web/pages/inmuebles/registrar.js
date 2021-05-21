@@ -2,10 +2,13 @@ import Head from 'next/head'
 import {Box, Container, Typography, Divider, TextField, Paper ,
         Grid, RadioGroup, FormControlLabel, Radio, FormLabel, FormHelperText,
         FormControl, InputLabel, Select, MenuItem, Button, GridList, GridListTile,
-        GridListTileBar} from '@material-ui/core'
+        GridListTileBar, Snackbar} from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 import { makeStyles } from '@material-ui/core/styles';
 import { useRef, useState } from 'react';
 import useMediaQuery from '../../utils/CustomHooks'
+import OkDialog from '../../components/basic/OkDialog'
+import { useRouter } from 'next/router'
 
 export default function RegistrarInmueble(){
 
@@ -97,12 +100,32 @@ const FormNuevoInmueble = ()=>{
     const [isWrong, setIsWrong] = useState(false);
     const [isPropietary, setIsPropietary] = useState("Si");
     const [tileData, setTileData] = useState([]); //ImgsPreview
+    const [open, setOpen] = useState(false);
+    const [successDialog, setSuccessDialog] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
+    //Router
+    const router = useRouter();
 
     let isTabletOrBigger= useMediaQuery("(min-width: 426px)");
 
     const handleSubmit = (e) =>{
         e.preventDefault();
+        const someoneIsMissing= (title==="" || description==="" || surface==="" || nGarage==="" || nRooms ==="" || nBathrooms==="" ||
+         (isPropietary==="No" && propietaryName==="") || calle==="" || numExt==="" || colonia==="" || cp==="" || ciudad==="" || estado==="" ||
+         precio==="");
+
+        if(someoneIsMissing || imgs.current.files.length===0){
+            setIsWrong(true);
+            if(imgs.current.files.length===0)
+                setAlertMessage("Agrega mínimo una foto");
+            else
+                setAlertMessage("Datos incompletos");
+            setOpen(true);
+        }else{
+            setIsWrong(false);
+            setSuccessDialog(true);
+        }
     }
 
     const handleNumber = (value,callback) =>{
@@ -130,19 +153,18 @@ const FormNuevoInmueble = ()=>{
         setTileData(tiles);
     }
 
-    // const tileData = [
-    //     {
-    //         img: "/img/landing/carrusel0.jpg",
-    //         title: 'Image',
-    //         author: 'author',
-    //     },
-    //     {
-    //         img: "/img/landing/carrusel1.jpg",
-    //         title: 'Image',
-    //         author: 'author',
-    //     }
-    // ];
+    const handleAlertClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
 
+    const handleOnOk = () =>{
+        setSuccessDialog(false);
+        router.push("/");
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -193,7 +215,7 @@ const FormNuevoInmueble = ()=>{
                 rowsMax={10}
                 value={characteristics}
                 onChange={(e)=>{setCharacteristics(e.target.value)}}
-                error={(characteristics.length>500 || (isWrong && characteristics===""))}
+                error={(characteristics.length>500)}
                 helperText={(characteristics.length>500)?`${(characteristics.length-500)} caracteres sobre 500`:""}
                 />
             </div>
@@ -257,7 +279,7 @@ const FormNuevoInmueble = ()=>{
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item> <TextField value={precio} type="number" className={classes.selectBigger} onChange={(e)=>{handleNumber(e.target.value,setPrecio)}} variant="outlined" label="Precio" error={(isWrong && estado==="")} helperText={(isWrong && estado==="")?"Requerido":""} /></Grid>
+                <Grid item> <TextField value={precio} type="number" className={classes.selectBigger} onChange={(e)=>{handleNumber(e.target.value,setPrecio)}} variant="outlined" label="Precio MXN" error={(isWrong && precio==="")} helperText={(isWrong && precio==="")?"Requerido":""} /></Grid>
             </Grid>
             <Box padding={1}/>
             <Typography variant="h5">Fotos del Inmueble</Typography>
@@ -297,7 +319,21 @@ const FormNuevoInmueble = ()=>{
                         />
                     </Button>
             </Box>
-            {/* Falta enviar datos onSubmit y Validar */}
+            <Divider/>
+            <Box width="60%" margin="auto" marginTop={2}>
+                    <Button variant="outlined" type={"submit"} fullWidth color="secondary">
+                        Registrar Nuevo Inmueble
+                    </Button>
+            </Box>
+            <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{vertical:"bottom", horizontal:"right"}} onClose={handleAlertClose}>
+                <Alert severity="error" variant="filled" onClose={handleAlertClose}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
+            <OkDialog open={successDialog} 
+                    title={`¡Publicación Exitosa de ${title}!`}
+                    message={`La publicación ha sido registrada con éxito y ya es visible en el sistema, puedes gestionarla desde "Gestión de inmuebles".`}
+                    onOk={handleOnOk}/>
         </form>
     );
 }
