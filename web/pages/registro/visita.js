@@ -42,7 +42,7 @@ export default function RegistroVisita() {
 
 
 
-const Example = () => {
+const DatosHORA = () => {
     const [startDate, setStartDate] = useState(new Date());
     return (
         <DatePicker selected={startDate} onChange={date => setStartDate(date)} showTimeSelect dateFormat="Pp"/>
@@ -55,39 +55,13 @@ const Form = () => {
     //Form values
     const [email, setEmail] = useState("solovino");
     const [inmueble, setInmueble] = useState("SuperInmueble");
-    const [open, setOpen] = useState(false);
-    const [alertMessage, setAlertMessage] = useState();
-    const [successDialog, setSuccessDialog] = useState(false);
+
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        var isPhotoNoEmpty = photo.current.files.length != 1;
-        if (photo.current.files.length != 1 || name === "" || apPat === "" || apMat === "" || email === "" || pswd === "" || confPswd === "" || pswd != confPswd) {
-            if (photo.current.files.length != 1)
-                setAlertMessage("Selecciona una foto");
-            else
-                setAlertMessage("Datos incompletos")
-            setIsWrong(true);
-            setOpen(true);
-
-        } else {
-            setIsWrong(false);
-            setSuccessDialog(true);
-        }
+       console.log(e);
     }
 
-    const handleAlertClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
 
-        setOpen(false);
-    };
-
-    const handleOnOk = () => {
-        setSuccessDialog(false);
-        router.push("/");
-    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -104,13 +78,13 @@ const Form = () => {
                 <Grid container spacing={5} justify="center" >
                     <Grid item>
                         Día y hora de la visita : 
-                        <Example></Example>
+                        <DatosHORA></DatosHORA>
 
 
                     </Grid>
                 </Grid>
 
-                <Box width="60%" margin="auto">
+                <Box width="60%" margin={3}>
                     <Button variant="outlined" type={"submit"} fullWidth color="secondary">
                         Registrar
                     </Button>
