@@ -1,15 +1,18 @@
 import { Button, Container, Divider, Grid, Paper, TextField, Typography, Snackbar } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert';
 import Box from '@material-ui/core/Box'
-import { useRef, useState} from 'react';
+import { useRef, useState } from 'react';
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+
 
 import Head from 'next/head';
 import OkDialog from '../../components/basic/OkDialog';
 import { useRouter } from 'next/router';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import es from 'date-fns/locale/es';
+registerLocale('es', es)
 
 
 export default function RegistroVisita() {
@@ -38,23 +41,16 @@ export default function RegistroVisita() {
 
 
 
-const useStyles = makeStyles((theme) => ({
-    large: {
-        width: theme.spacing(30),
-        height: theme.spacing(30),
-    },
-}));
 
 const Example = () => {
     const [startDate, setStartDate] = useState(new Date());
     return (
-      <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
+        <DatePicker selected={startDate} onChange={date => setStartDate(date)} showTimeSelect dateFormat="Pp"/>
     );
-  };
+};
 
 
 const Form = () => {
-    const classes = useStyles();
     const router = useRouter();
     //Form values
     const [email, setEmail] = useState("solovino");
@@ -107,13 +103,9 @@ const Form = () => {
             <Box m={4}>
                 <Grid container spacing={5} justify="center" >
                     <Grid item>
+                        Día y hora de la visita : 
                         <Example></Example>
-                      
 
-                    </Grid>
-                    <Grid item>
-                        <Example></Example>
-                      
 
                     </Grid>
                 </Grid>
@@ -124,15 +116,7 @@ const Form = () => {
                     </Button>
                 </Box>
             </Box>
-            <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} onClose={handleAlertClose}>
-                <Alert severity="error" variant="filled" onClose={handleAlertClose}>
-                    {alertMessage}
-                </Alert>
-            </Snackbar>
-            <OkDialog open={successDialog}
-                title={`¡Registro Exitoso ${name}!`}
-                message={`Hemos enviado un correo a "${email}" para poder confirmar tu cuenta.`}
-                onOk={handleOnOk} />
+          
         </form>
     );
 }

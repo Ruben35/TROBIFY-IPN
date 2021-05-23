@@ -12,6 +12,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "create-react-class": "^15.7.0",
+    "date-fns": "^2.21.3",
     "jss": "latest",
     "next": "^10.2.2",
     "next-images": "^1.7.0",
