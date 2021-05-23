@@ -30,10 +30,7 @@ router.post('/eliminarFavorito',validarJWT,eliminarFavorito);
 
 
 //peticiones POST
-router.post('/registroCliente',[uploadMultiple],registroCliente);
-router.post('/registroAgencia',[uploadMultiple],registroAgencia);
-
-
-
+//router.post('/registroCliente',[uploadMultiple],registroCliente);
+//router.post('/registroAgencia',[uploadMultiple],registroAgencia);
 
 module.exports = router
