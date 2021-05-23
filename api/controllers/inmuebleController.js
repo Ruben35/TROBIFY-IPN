@@ -46,7 +46,6 @@ const getAllInmuebles  = async(req,res = response) =>{
         
     }
 
-   
 }
 
 const inmueblesCliente = async(req,res = response) =>{
@@ -83,8 +82,7 @@ const inmueblesCliente = async(req,res = response) =>{
 
                 j['servicios'].push(k);
 
-            }
-            
+            }     
     }
 
     }
@@ -99,8 +97,6 @@ const inmueblesCliente = async(req,res = response) =>{
         })
         
     }
-
-    
     
 }
 
@@ -222,12 +218,108 @@ const getInmuebles = async(req, res = response) => {
 }
 
 
+const agregarFavorito = async(req,resp) => {
+    //suponiendo que me llega el ide por post
+    //verifico jsonwebToken y saco el correo
+    const correo = req.correo;
+    const {idinmueble} = req.body;
+    try {
+
+    const nuevoFav ={
+        cliente_correo:correo,
+        inmueble_idinmueble:idinmueble
+    }
+
+    conn.query('insert into favoritos set ?',[nuevoFav]);
+
+    return resp.json({
+
+        ok:true,
+        msg:'Agregado correctamente',
+        
+
+    })
+        
+    } catch (error) {
+
+        return resp.json({
+
+        ok:false,
+        msg:'Ocurrio un error',
+    
+    })
+        
+    }
+}
+
+
+//seleccionar favoritos por cliente
+const getFavoritos = async(req,resp) =>{
+
+    const correo = req.correo;
+    //console.log(correo);
+
+    const r = await conn.query('select inmueble_idinmueble from favoritos where cliente_correo =?',[correo]);
+    for( i of r){
+        const img = await conn.query('select imagenes_idimagen from imagenes_inmueble where inmueble_idinmueble =? LIMIT 1',[i.idinmueble]);
+        i["img"] = img;
+    }
+
+    return resp.json({
+        ok:true,
+        msg:'funcionando',
+        res:r
+        
+    })
+
+}
+
+
+const eliminarFavorito = async(req,resp) =>{
+
+    const correo = req.correo;
+    const {idinmueble} = req.body;
+
+    const nuevoFav ={
+
+        inmueble_idinmueble:idinmueble,
+        cliente_correo:correo
+    }
+
+    try {
+        conn.query('insert into papelera_favoritos set ?',[nuevoFav]);
+        conn.query('delete from favoritos where cliente_correo =? and inmueble_idinmueble=?',[correo,idinmueble]);
+
+        return resp.json({
+            ok: true,
+            msg: 'Eliminado correctamente'
+        })
+        
+    } catch (error) {
+
+        return resp.json({
+            ok: false,
+            msg:'Ocurrio un error'
+        })
+        
+    }
+
+
+
+}
+
+
 module.exports = {
 
     getAllInmuebles,
     inmueblesCliente,
     inmueblesAgencia,
     inmuebleUnitario,
-    getInmuebles
+    getInmuebles,
+    getFavoritos,
+    agregarFavorito,
+    eliminarFavorito
+    
+
     
 }

@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const { generarJWT} = require('../helpers/jwt');
 const uniqid = require('uniqid');
 const nodemailer = require("../configs/nodemailer.config");
+
 const login = async(req,res = response ) =>{
 
     const{correo,contrasena} = req.body;
@@ -86,9 +87,6 @@ const registrar = async(req,res = response) =>{
         
     }
 
-    
-
-
     let r = await conn.query('select nombre from cliente where correo =?',[correo]);
 
     if(Object.keys(r).length !=0){
@@ -120,7 +118,7 @@ const registrar = async(req,res = response) =>{
         }
 
         //insertar
-        //await conn.query('insert into cliente set?',[nuevo]);
+        await conn.query('insert into cliente set ?',[nuevo]);
         
         nodemailer.sendConfirmationEmail(nombre,correo,token);
 
@@ -133,14 +131,11 @@ const registrar = async(req,res = response) =>{
     }
 
 }
-
-
 const verificar = (req,resp) =>{
 
     const {idusuario,nombre} = req;
 
     //console.log(idusuario,nombre);
-
 
     return resp.json({
         msg:'muchas gracias por verificarte',
