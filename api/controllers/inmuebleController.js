@@ -313,6 +313,130 @@ const eliminarFavorito = async(req,resp) =>{
 }
 
 
+//POST registro de inmueble cliente
+const registroInmuebleCliente = async (req, res) => {
+    try {
+        const { correo,titulo,descripcion,caracteristicas,precio,status,superficie,noGarage,noRecamaras,noBanios,propietario,transaccion,cp,calle,noExterior,noInterior,colonia,ciudad,estado } = req.body;
+        //checar que el correo este registrado como cliente
+        const listaCliente = await conn.query("select * from cliente where correo = ?", [correo]);
+        if (listaCliente.length === 0) {
+            return res.json({
+                mensaje: "Cliente no encontrado en la BD"
+            })
+        }
+        //crear un id para la tabla de inmuebles
+        const idInmueble = uniqid('inmueble');
+        
+        //registro del CP
+        let object = await conn.query("select count(*) as numResults from zonas where cp=?",[cp]);
+        if(object[0].numResults === 0){
+            console.log("no esta registrado este CP");
+            await conn.query("insert into zonas(cp,colonia,ciudad,estado) value(?,?,?,?)",[cp,colonia,ciudad,estado]);
+            console.log("CP nuevo registrado");
+        }
+
+        //ver el registro de las direcciones y guardar la del cliente con CP
+        object = await conn.query("select count(*) as numResults from direcciones");
+        const iddireccion = (object[0].numResults)+1;
+        await conn.query("insert into direcciones(iddireccion,calle,numExt,numInt,zonas_cp) value(?,?,?,?,?)",[iddireccion,calle,noExterior,noInterior,cp]);
+        console.log("direccion regitrada");
+        //identificar transaccion de ya sea renta o venta. (renta 1, venta 2)
+        let idTransaccion = 1;  
+        if(transaccion === "Venta"){
+            idTransaccion = 2;
+        }      
+        //registrar el inmueble;
+        await conn.query("insert into inmueble(titulo,descripcion,caracteristicas,precio,status,superficie,nGarage,nRecamaras,nBanios,propietario,idinmueble,tipo_transaccion_idtipo_transaccion,direcciones_iddireccion) value(?,?,?,?,?,?,?,?,?,?,?,?,?)",[titulo,descripcion,caracteristicas,precio,status,superficie,noGarage,noRecamaras,noBanios,propietario,idInmueble,idTransaccion,iddireccion])
+        //guardar imagenes en la base de datos tablas imagenes
+        //Y relacionar las imagenes de inmueble con la tabla inmueble
+        let a = 0;
+        for (a; a < req.files.length; a++) {
+            const idImagen = uniqid('inmuebleImagen-');
+            //guardado de imagenes
+            await conn.query('insert into imagenes(idimagen,path) values(?,?)', [idImagen, req.files[a].path]);
+            //relacion de imagenes e inmueble
+            await conn.query('insert into imagenes_inmueble(inmueble_idinmueble,imagenes_idimagen) values(?,?)', [idInmueble, idImagen]);
+        }
+        //relacion de inmueble con la tabla cliente
+        await conn.query("insert into oferta_cliente(inmueble_idinmueble,cliente_correo) value(?,?)",[idInmueble,correo]);
+        console.log("Oferta registrada")
+        return res.json({
+            mensaje:"Inmueble registrado con exito al cliente"
+        })
+    } catch (error) {
+        return res.json({
+            mensaje: "No se completo la petición"
+        });
+    }
+
+
+
+
+    
+}
+//POST registro de inmueble agencia
+const registroInmuebleAgencia = async(req, res) => {
+    try {
+        const { correo,titulo,descripcion,caracteristicas,precio,status,superficie,noGarage,noRecamaras,noBanios,propietario,transaccion,cp,calle,noExterior,noInterior,colonia,ciudad,estado } = req.body;
+        //checar que el correo este registrado como cliente
+        const listaCliente = await conn.query("select * from agencia where correo = ?", [correo]);
+        if (listaCliente.length === 0) {
+            return res.json({
+                mensaje: "Agencia no encontrada en la BD"
+            })
+        }
+        
+        //crear un id para la tabla de inmuebles
+        const idInmueble = uniqid('inmueble');
+        
+        //registro del CP
+        let object = await conn.query("select count(*) as numResults from zonas where cp=?",[cp]);
+        if(object[0].numResults === 0){
+            console.log("no esta registrado este CP");
+            await conn.query("insert into zonas(cp,colonia,ciudad,estado) value(?,?,?,?)",[cp,colonia,ciudad,estado]);
+            console.log("CP nuevo registrado");
+        }
+
+        //ver el registro de las direcciones y guardar la del cliente con CP
+        object = await conn.query("select count(*) as numResults from direcciones");
+        const iddireccion = (object[0].numResults)+1;
+        await conn.query("insert into direcciones(iddireccion,calle,numExt,numInt,zonas_cp) value(?,?,?,?,?)",[iddireccion,calle,noExterior,noInterior,cp]);
+        console.log("direccion regitrada");
+        //identificar transaccion de ya sea renta o venta. (renta 1, venta 2)
+        let idTransaccion = 1;  
+        if(transaccion === "Venta"){
+            idTransaccion = 2;
+        }      
+        //registrar el inmueble;
+        await conn.query("insert into inmueble(titulo,descripcion,caracteristicas,precio,status,superficie,nGarage,nRecamaras,nBanios,propietario,idinmueble,tipo_transaccion_idtipo_transaccion,direcciones_iddireccion) value(?,?,?,?,?,?,?,?,?,?,?,?,?)",[titulo,descripcion,caracteristicas,precio,status,superficie,noGarage,noRecamaras,noBanios,propietario,idInmueble,idTransaccion,iddireccion])
+        //guardar imagenes en la base de datos tablas imagenes
+        //Y relacionar las imagenes de inmueble con la tabla inmueble
+        let a = 0;
+        for (a; a < req.files.length; a++) {
+            const idImagen = uniqid('inmuebleImagen-');
+            //guardado de imagenes
+            await conn.query('insert into imagenes(idimagen,path) values(?,?)', [idImagen, req.files[a].path]);
+            //relacion de imagenes e inmueble
+            await conn.query('insert into imagenes_inmueble(inmueble_idinmueble,imagenes_idimagen) values(?,?)', [idInmueble, idImagen]);
+        }
+        //relacion de inmueble con la tabla cliente
+        await conn.query("insert into oferta_agencias(inmueble_idinmueble,agencia_correo) value(?,?)",[idInmueble,correo]);
+        console.log("Oferta registrada")
+        return res.json({
+            mensaje:"Inmueble registrado con exito al cliente"
+        })
+    } catch (error) {
+        return res.json({
+            mensaje: "No se completo la petición"
+
+        });
+    }
+
+
+
+}
+
+
 module.exports = {
 
     getAllInmuebles,
@@ -322,7 +446,9 @@ module.exports = {
     getInmuebles,
     getFavoritos,
     agregarFavorito,
-    eliminarFavorito
+    eliminarFavorito,
+    registroInmuebleCliente,
+    registroInmuebleAgencia
     
 
     

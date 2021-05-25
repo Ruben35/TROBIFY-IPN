@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllInmuebles, inmueblesCliente, inmueblesAgencia, inmuebleUnitario, getInmuebles, getFavoritos,agregarFavorito, eliminarFavorito} = require('../controllers/inmuebleController');
+const { getAllInmuebles, inmueblesCliente, inmueblesAgencia, inmuebleUnitario, getInmuebles, getFavoritos,agregarFavorito, eliminarFavorito,registroInmuebleCliente, registroInmuebleAgencia} = require('../controllers/inmuebleController');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const router = express.Router();
 const multer = require('multer');
@@ -30,7 +30,10 @@ router.post('/eliminarFavorito',validarJWT,eliminarFavorito);
 
 
 //peticiones POST
-//router.post('/registroCliente',[uploadMultiple],registroCliente);
-//router.post('/registroAgencia',[uploadMultiple],registroAgencia);
+
+router.post('/registroCliente',[uploadMultiple],registroInmuebleCliente);
+
+router.post('/registroAgencia',[uploadMultiple],registroInmuebleAgencia);
+
 
 module.exports = router
