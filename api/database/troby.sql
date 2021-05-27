@@ -333,7 +333,7 @@ ENGINE = InnoDB;
 -- Table `troby`.`visitas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `troby`.`visitas` (
-  `status` INT NOT NULL,
+  `status` INT NOT NULL DEFAULT 0, -- 0 es petición
   `fecha` DATETIME NOT NULL,
   `inmueble_idinmueble` VARCHAR(45) NOT NULL,
   `cliente_correo` VARCHAR(64) NOT NULL,

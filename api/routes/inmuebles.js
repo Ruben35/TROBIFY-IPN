@@ -1,5 +1,7 @@
 const express = require('express');
-const { getAllInmuebles, inmueblesCliente, inmueblesAgencia, inmuebleUnitario, getInmuebles, getFavoritos,agregarFavorito, eliminarFavorito} = require('../controllers/inmuebleController');
+const { getAllInmuebles, inmueblesCliente, inmueblesAgencia, inmuebleUnitario, 
+    getInmuebles, getFavoritos,agregarFavorito, eliminarFavorito } = require('../controllers/inmuebleController');
+const { agendarVisita } = require('../controllers/visitaController');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const router = express.Router();
 const multer = require('multer');
@@ -27,6 +29,7 @@ router.get('/favoritos/:correo',validarJWT,getFavoritos);
 router.post('/agregarFavorito',validarJWT,agregarFavorito);
 router.post('/eliminarFavorito',validarJWT,eliminarFavorito);
 // ?precio_inf=1&precio_sup=2
+router.post('/inmueble/visita/agendar', agendarVisita);
 
 
 //peticiones POST
