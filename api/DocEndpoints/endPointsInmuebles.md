@@ -151,5 +151,83 @@ _Si ocurre algun error :_
 
 ```
 
+# Servicios 🏢
+
+## 'inmueble/registrarServicio' ®
+_Este endpoint se encarga de listar y registrar nuevos servicios por zona_
+_* Peticion Post_
+_* Body esperado :_
+```
+{
+    "servicio":"ferreteria",
+    "descripcion":"la mejor purificadora de lo mejor en servicios",
+    "zona":"09440"
+}
+```
+_Servcio : representa uno de los tipos de servicio seleccionados del catalogo, descripcion: descripcion del servicio. Zona:la zona en la que se va a registrar el nuevo servicio_
+
+# Respuestas 📢
+
+_Si todo sale correcto (devuelve un JSON):_
+```
+{
+    "ok": true,
+    "msg": "¡Servicio registrado exitosamente!"
+}
+```
+
+_Si ocurre algun error (devuelve un JSON) :_
+```
+{
+    "ok": false,
+    "msg": "Matenga la calma y comuniquese con su programador backend mas cercano"
+}
+```
+
+# Ejemplo de Prueba
+
+![Screenshot](rs.png)
+
+## 'inmueble/mostrarServicios/:cp' 👀
+
+_Este endpoint se encarga de listar todo acerca de los servicios_
+_* Peticion GET_
+_* argumento esperado : codigo postal_
+
+# Respuestas 📢
+_Si todo sale correcto (devuelve un JSON) con ub boolean y una lista de json's  con la informacion del servicio:_
+
+```
+{
+    "ok": true,
+    "servicios": [
+        {
+            "servicio": "comercial",
+            "descripcion": "descripcion prueba"
+        },
+        {
+            "servicio": "ferreteria",
+            "descripcion": "la mejor purificadora de lo mejor en servicios"
+        }
+    ]
+}
+```
+
+_Si ocurre algun error (devuelve un JSON) :_
+
+```
+{
+    ok:false,
+    msg:"Matenga la calma y comuniquese con su programador backend mas cercano"
+
+}
+
+```
+
+# Ejemplo de Prueba
+
+![Screenshot](ms.png)
+
+
 ## Autores ✒️
 * **Ehecatzin Vallejo** - *Endpoints Inmueble* - [catzin](https://github.com/catzin)

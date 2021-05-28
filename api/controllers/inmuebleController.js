@@ -432,7 +432,88 @@ const registroInmuebleAgencia = async(req, res) => {
         });
     }
 
+}
 
+const registrarServicioZona = async(req,resp) =>{
+
+    //se supone que tipo_servicio es un catalogo con el nombre del tipo de servicio
+    // body , se ser la cadena del nombre osea --> servicio : patito , y la zona zona: patito
+    const {servicio,descripcion,zona} = req.body;
+    //obtengo id de ese servicio
+
+    //seleccionar max de la tabla servicios para calcular el id
+    const maxid = await conn.query('select MAX(idservicios) as id FROM servicios'); 
+    let idservicios = maxid[0].id;
+    if(idservicios == null){idservicios = 1;} else{idservicios++;}
+
+    const idserv = await conn.query('select idtipo_servicios from tipo_servicios where servicio =?',[servicio]);
+    try {
+
+        const newServ = {
+            idservicios:idservicios,
+            descripcion:descripcion,
+            tipo_servicios_idtipo_servicios:idserv[0].idtipo_servicios
+        }
+        const newServZ = {
+            servicios_idservicios:idservicios,
+            zonas_cp:zona
+        }
+        
+        await conn.query('insert into servicios set ?',[newServ]); 
+        await conn.query('insert into zona_servicio set ?',[newServZ]);
+
+        return resp.json({
+            ok:true,
+            msg:"¡Servicio registrado exitosamente!"
+        })
+        
+    } catch (error) {
+
+        return resp.json({
+            ok : false,
+            msg:"Matenga la calma y comuniquese con su programador backend mas cercano"
+        })
+         
+    }
+    
+}
+
+const verServiciosZona = async(req,resp) =>{
+    const cp = req.params.cp;
+    console.log(cp);
+    const servicios = [];
+
+    try {
+
+    let listServs = await conn.query('select servicios_idservicios from zona_servicio where zonas_cp =?', [cp]);
+        
+    for (l of listServs) {
+        let servs = await conn.query('select ts.servicio , s.descripcion from servicios s ,tipo_servicios ts where ts.idtipo_servicios = s.tipo_servicios_idtipo_servicios and s.idservicios=?', [l.servicios_idservicios]);
+        for (k of servs) {
+            servicios.push(k);
+
+        }
+    }
+
+    return resp.json({
+        ok:true,
+        servicios
+    })
+
+        
+    } catch (error) {
+
+    return resp.json({
+        ok:false,
+        msg:"Matenga la calma y comuniquese con su programador backend mas cercano"
+    })
+        
+    }
+
+
+  
+    
+  
 
 }
 
@@ -448,7 +529,9 @@ module.exports = {
     agregarFavorito,
     eliminarFavorito,
     registroInmuebleCliente,
-    registroInmuebleAgencia
+    registroInmuebleAgencia,
+    registrarServicioZona,
+    verServiciosZona
     
 
     
