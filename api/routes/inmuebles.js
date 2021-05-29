@@ -3,6 +3,7 @@ const { getAllInmuebles, inmueblesCliente, inmueblesAgencia,
  inmuebleUnitario, getInmuebles, getFavoritos,agregarFavorito, 
  eliminarFavorito,registroInmuebleCliente, registroInmuebleAgencia, 
  registrarServicioZona, verServiciosZona} = require('../controllers/inmuebleController');
+const { agendarVisita } = require('../controllers/visitaController');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const router = express.Router();
 const multer = require('multer');
@@ -32,7 +33,8 @@ router.post('/eliminarFavorito',validarJWT,eliminarFavorito);
 // ?precio_inf=1&precio_sup=2
 //router.post('/inmueble/visita/agendar',agendarVisita);
 
-
+/* -------- VISITIAS ---------- */
+router.post('/visita/agendar', agendarVisita);
 
 //peticiones POST
 

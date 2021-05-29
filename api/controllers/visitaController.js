@@ -11,14 +11,15 @@ const agendarVisita = async(req, res) =>{
     const parametros = {
         fecha:fecha_visita,
         inmueble_idinmueble:inmueble_id,
-        cliente_correo:cliente_correo
+        cliente_correo:cliente_correo,
+        status:0 // 0 - petición
     }
 
     await conn.query(insert, parametros);
 
     return res.json({
         ok : true,
-        msg : 'VIsita agendada'
+        msg : 'Visita agendada'
     })
 }
 
