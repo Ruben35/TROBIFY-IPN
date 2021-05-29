@@ -398,10 +398,22 @@ const registroInmuebleAgencia = async(req, res) => {
         }
 
         //ver el registro de las direcciones y guardar la del cliente con CP
-        object = await conn.query("select count(*) as numResults from direcciones");
-        const iddireccion = (object[0].numResults)+1;
-        await conn.query("insert into direcciones(iddireccion,calle,numExt,numInt,zonas_cp) value(?,?,?,?,?)",[iddireccion,calle,noExterior,noInterior,cp]);
-        console.log("direccion regitrada");
+        object = await conn.query("SELECT EXISTS(SELECT * FROM direcciones WHERE calle = ? AND numExt = ? AND numInt = ? AND zonas_cp = ?) AS existe;",
+                [calle,noExterior,noInterior,cp]);
+        const existe_direccion= object[0].existe;
+
+        let iddireccion = 1;
+        if(!existe_direccion){
+            object = await conn.query("select count(*) as numResults from direcciones");
+            iddireccion = (object[0].numResults)+1;
+            await conn.query("insert into direcciones(iddireccion,calle,numExt,numInt,zonas_cp) value(?,?,?,?,?)",[iddireccion,calle,noExterior,noInterior,cp]);
+            console.log("direccion regitrada");
+        }else {
+            object = await conn.query("SELECT iddireccion FROM direcciones WHERE calle = ? AND numExt = ? AND numInt = ? AND zonas_cp = ?;",
+                    [calle,noExterior,noInterior,cp]);
+            iddireccion = object[0].iddireccion;
+        }
+       
         //identificar transaccion de ya sea renta o venta. (renta 1, venta 2)
         let idTransaccion = 1;  
         if(transaccion === "Venta"){
@@ -426,6 +438,7 @@ const registroInmuebleAgencia = async(req, res) => {
             mensaje:"Inmueble registrado con exito al cliente"
         })
     } catch (error) {
+        console.log(error);
         return res.json({
             mensaje: "No se completo la petición"
 
