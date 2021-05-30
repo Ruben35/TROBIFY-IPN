@@ -27,7 +27,7 @@ INSERT INTO `imagenes` VALUES ('0','default.png');
 INSERT INTO cliente (correo, contrasena, nombre, apPaterno, apMaterno, imagenes_idimagen)
 VALUES ("david.mb5@hotmail.com", "$2a$04$Ale9GAwVGsiXJJb9YeDyxuA6mqrJMouPmn.QI7SsZzg8R7mme4eIq", "David", "Madrigal", "Buendia", "0");
 
-INSERT INTO `agencia` VALUES ('madrigal.bd@gmail.com','MABD001102','david\'s agency','mi descripcion','1234','0');
+INSERT INTO `agencia` VALUES ('madrigal.bd@gmail.com','MABD001102','david\'s agency','mi descripcion','12345678','0');
 
 INSERT INTO `zonas` VALUES (6470,'San Rafael','CDMX','DF');
 INSERT INTO `direcciones` VALUES (1,'Miguel E. Schultz',301,302,6470);
