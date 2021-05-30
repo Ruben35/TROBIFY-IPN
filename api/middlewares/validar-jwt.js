@@ -1,5 +1,6 @@
 const { response } = require("express");
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 
 const validarJWTParams = (req,resp = response,next) =>{
@@ -16,8 +17,8 @@ const validarJWTParams = (req,resp = response,next) =>{
 
     try {
         
-        const { idusuario,nombre } = jwt.verify(token,process.env.SECRET_JWT_SEED);
-        req.idusuario = idusuario;
+        const {correo,nombre } = jwt.verify(token,process.env.SECRET_JWT_SEED);
+        req.correo = correo;
         req.nombre = nombre;
 
         
@@ -53,7 +54,7 @@ const validarJWT = (req,res=response,next)=>{
 
         try {
             //verificar token y sacar datos
-            const {correo,nombre} = jwt.verify(token,process.env.SECRET);
+            const {correo,nombre} = jwt.verify(token,process.env.SECRET_JWT_SEED);
             //añadimos a la req esos datos
 
             req.correo = correo;
