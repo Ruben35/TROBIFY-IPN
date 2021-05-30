@@ -8,47 +8,95 @@ const nodemailer = require("../configs/nodemailer.config");
 const login = async(req,res = response ) =>{
 
     const{correo,contrasena} = req.body;
+    const type = 0;
 
     const r = await conn.query('select nombre,correo,contrasena from cliente where correo =?',[correo]);
-    
-    if(Object.keys(r).length == 0){
+    const ag = await conn.query('select nombre,correo,contrasena from agencia where correo =?',[correo]);
+
+    if(Object.keys(r).length == 0 || Object.keys(ag) == 0){
         return res.status(400).json({
             ok:false,
             msg:'Usuario o contraseña incorrectos'
 
         })
     }
+
     else{
-        //verificar
-        const password = r[0].contrasena;
-        //para jwt y respuesta
-        const nombre  = r[0].nombre;
-        const correob = r[0].correo
+        // es usuario
+        if(Object.keys(r).length != 0){
 
-        //validar contrasena
-        const validar = bcrypt.compareSync(contrasena,password);
+            //verificar
+            const password = r[0].contrasena;
+            //para jwt y respuesta
+            const nombre  = r[0].nombre;
+            //const correob = r[0].correo
 
-        if(!validar){
-            return res.status(400).json({
-                ok:false,
-                msg:'¡correo o contraseña incorrectos!'
-            })
+            //validar contrasena
+            const validar = bcrypt.compareSync(contrasena,password);
+
+            if(!validar){
+                return res.status(400).json({
+                    ok:false,
+                    msg:'¡correo o contraseña incorrectos!'
+                })
+            }
+
+            else{
+
+                //generamos el json web Token
+                const token = await generarJWT(correo,nombre);
+                //devolvemos respuesta
+                return res.status(200).json({
+                    ok:true,
+                    nombre,
+                    correo,
+                    tipo:'cliente',
+                    token
+                })
+            }
+
         }
 
         else{
 
-            //generamos el json web Token
-             const token = await generarJWT(correo,nombre);
-             //devolvemos respuesta
-             return res.status(200).json({
-                 ok:true,
-                 nombre,
-                 correo,
-                 token
-             })
-        }
+            if(Object.keys(ag).length != 0){
 
+                //verificar
+                const password = ag[0].contrasena;
+                //para jwt y respuesta
+                const nombre  = ag[0].nombre;
+                //const correob = ag[0].correo
+
+                const validar = bcrypt.compareSync(contrasena,password);
+
+                if(!validar){
+
+                    return res.status(400).json({
+                        ok:false,
+                        msg:'¡correo o contraseña incorrectos!'
+                    })
+                }
+
+                 else{
+
+                //generamos el json web Token
+                const token = await generarJWT(correo,nombre);
+                //devolvemos respuesta
+                return res.status(200).json({
+                    ok:true,
+                    nombre,
+                    correo,
+                    tipo:'agencia',
+                    token
+                })
+            }
+
+            }
+        }
     }
+
+    
+ 
    
 }
 
