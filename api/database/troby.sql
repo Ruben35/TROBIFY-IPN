@@ -101,7 +101,7 @@ ENGINE = InnoDB;
 -- Table `troby`.`tipo_transaccion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `troby`.`tipo_transaccion` (
-  `idtipo_transaccion` INT NOT NULL,
+  `idtipo_transaccion` INT NOT NULL AUTO_INCREMENT,
   `transaccion` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idtipo_transaccion`))
 ENGINE = InnoDB;
@@ -333,7 +333,7 @@ ENGINE = InnoDB;
 -- Table `troby`.`visitas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `troby`.`visitas` (
-  `status` INT NOT NULL,
+  `status` INT NOT NULL DEFAULT 0, -- 0 es petición
   `fecha` DATETIME NOT NULL,
   `inmueble_idinmueble` VARCHAR(45) NOT NULL,
   `cliente_correo` VARCHAR(64) NOT NULL,

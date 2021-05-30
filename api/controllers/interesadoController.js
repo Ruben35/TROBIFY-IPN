@@ -1,4 +1,4 @@
-
+/*
 const {response} = require('express');
 const conn = require('../bd');
 
@@ -25,4 +25,4 @@ const registrar  = async(req, res = response) => {
 
 
     
-}
+}*/

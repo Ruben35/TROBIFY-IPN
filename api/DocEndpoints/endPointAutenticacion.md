@@ -1,49 +1,48 @@
-# EndPoints Autenticacion
+# EndPoints Autenticacion  👨‍🦰
+_Estos endpoints se encargan de llevar acabo el registro y la autenticacion para los usuarios de KukiHome_
 
-## '/auth/login'
+## '/auth/login' 👤
 
-* peticion POST
-* requiere body con {correo,contrasena}
-<p>
-Su función es realizar el logeo.
-Si se obtiene una mala petición , es por que la contraseña o el correo son incorrectos
-y mandamos la siguiente respuesta:
+_* peticion POST_
+_* requiere body con {correo,contrasena}_
 
+_Su función es realizar el logeo. Si se obtiene una mala petición , es por que la contraseña o el correo son incorrectos y mandamos la siguiente respuesta :_
+```
 return res.status(400).json({
             ok:false,
             msg:'Usuario o contraseña incorrectos'
 
         })
+```
 
+_Si todo sale correcto mandamos los siguentes datos en un JSON :_
 
-Si todo sale correcto mandamos los siguentes datos en un JSON:
-* booleano
-* nombre
-* correo
-* token
-
+```
   return res.status(200).json({
                  ok:true,
                  nombre,
                  correo,
                  token
              })
- Ejemplo de respuesta :
+```          
+ _Ejemplo de respuesta :_
 
+```  
  {
     "ok": true,
     "nombre": "Jorge",
     "correo": "runmara69@gmail.com",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3JyZW8iOiJydW5tYXJhNjlAZ21haWwuY29tIiwibm9tYnJlIjoiSm9yZ2UiLCJpYXQiOjE2MTk0OTM2NDMsImV4cCI6MTYxOTUzNjg0M30.U1TVdTOhmWJIA81W7kEM2mzR0xizpMZ0IsjNtodN4Ak"
 }
+```  
 
-</p>
 
 
-## '/auth/registro'
+## '/auth/registro'🙎‍♂️ 
 
-* peticion POST
-* se trabaja sobre la suposicion de que se recibe un objeto form-data
+_Peticion POST se trabaja sobre la suposicion de que se recibe un objeto form-data_
+
+``` 
     * nombre
     * appaterno
     * apmaterno
@@ -51,32 +50,39 @@ Si todo sale correcto mandamos los siguentes datos en un JSON:
     * contrasena
     * image   -- esta es el archivo de la imagen
 
+``` 
 
-<p>
 
-Su función es realizar el registro de un nuevo cliente.
-Si su correo ya esta registrado en el sistema mandamos la siguiente respuesta:
+_Su función es realizar el registro de un nuevo cliente. Si su correo ya esta registrado en el sistema mandamos la siguiente respuesta:_
 
-* booleano
-* mensaje : string
+``` 
+    {
+         
+    ok:false,
+    msg:'El correo ya ha sido registrado!'
 
-return res.status(400).json({
-                ok:false,
-                msg:'El correo ya ha sido registrado!'
+    }
 
-            })
+``` 
+_Si todo sale correcto mandamos los siguentes datos en un JSON:_
 
-Si todo sale correcto mandamos los siguentes datos en un JSON:
-
+``` 
 * booleano
 * token
 * msg : string
-</p>
-ejemplo de respuesta:
+``` 
+
+
+ _Ejemplo de respuesta del servidor_
+
+![Screenshot](resjson.png)
+
+
+_Ejemplo de respuesta :_
 
 ![Screenshot](respuesta.png)
 
-<p>Una vez realizado el registro llega el correo al cliente</p>
+_Una vez realizado el registro llega el correo al cliente_
 
 ![Screenshot](correo.png)
 
