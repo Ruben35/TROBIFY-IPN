@@ -46,4 +46,5 @@
 /web/.vercel
 
 # sql keys
-/keys.js
+/api/keys.js
+/api/uploads/
