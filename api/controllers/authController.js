@@ -5,15 +5,17 @@ const { generarJWT} = require('../helpers/jwt');
 const uniqid = require('uniqid');
 const nodemailer = require("../configs/nodemailer.config");
 
-const login = async(req,res = response ) =>{
+const login = async(req,res = response ) => {
 
     const{correo,contrasena} = req.body;
-    const type = 0;
 
+    //console.log(correo,contrasena);
     const r = await conn.query('select nombre,correo,contrasena from cliente where correo =?',[correo]);
     const ag = await conn.query('select nombre,correo,contrasena from agencia where correo =?',[correo]);
+    console.log(r);
 
-    if(Object.keys(r).length == 0 || Object.keys(ag) == 0){
+    if(Object.keys(r).length == 0){
+
         return res.status(400).json({
             ok:false,
             msg:'Usuario o contraseña incorrectos'
@@ -22,10 +24,8 @@ const login = async(req,res = response ) =>{
     }
 
     else{
-        // es usuario
-        if(Object.keys(r).length != 0){
 
-            //verificar
+        //verificar
             const password = r[0].contrasena;
             //para jwt y respuesta
             const nombre  = r[0].nombre;
@@ -54,30 +54,38 @@ const login = async(req,res = response ) =>{
                     token
                 })
             }
+            
+    }
 
-        }
 
-        else{
+    if(Object.keys(ag).length == 0){
 
-            if(Object.keys(ag).length != 0){
+        return res.status(400).json({
+            ok:false,
+            msg:'Usuario o contraseña incorrectos'
 
-                //verificar
-                const password = ag[0].contrasena;
-                //para jwt y respuesta
-                const nombre  = ag[0].nombre;
-                //const correob = ag[0].correo
+        })
 
-                const validar = bcrypt.compareSync(contrasena,password);
+    }
+    else{
 
-                if(!validar){
+        //verificar
+            const password = ag[0].contrasena;
+            //para jwt y respuesta
+            const nombre  = ag[0].nombre;
+            //const correob = r[0].correo
 
-                    return res.status(400).json({
-                        ok:false,
-                        msg:'¡correo o contraseña incorrectos!'
-                    })
-                }
+            //validar contrasena
+            const validar = bcrypt.compareSync(contrasena,password);
 
-                 else{
+            if(!validar){
+                return res.status(400).json({
+                    ok:false,
+                    msg:'¡correo o contraseña incorrectos!'
+                })
+            }
+
+            else{
 
                 //generamos el json web Token
                 const token = await generarJWT(correo,nombre);
@@ -91,13 +99,11 @@ const login = async(req,res = response ) =>{
                 })
             }
 
-            }
-        }
+
     }
 
     
  
-   
 }
 
 const registrar = async(req,res = response) =>{
