@@ -7,6 +7,7 @@ import styles from '../styles/landing.module.css'
 import React, {useState, useEffect} from 'react';
 import Image from 'next/image'
 import Box from '@material-ui/core/Box'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -50,8 +51,12 @@ export default function Home() {
       <Container maxWidth="xs" className={styles.imageContainer}><Image src="/img/landing/building.svg" width={1} height={1} layout='responsive' />
       </Container>
         <Box display="flex" justifyContent="center" flexWrap="wrap" mb={8}>
-          <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
-          <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
+          <Link href="/registro/cliente">
+            <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
+          </Link>
+          <Link href="/registro/agencia">
+            <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
+          </Link>
         </Box>
     </>
   )
@@ -90,9 +95,11 @@ const Hero = () =>{
             El lugar perfecto para buscar el inmueble perfecto.
           </Typography>
         </Container>
-          <Button variant="contained" className={styles.hero_callToAction} color="primary">
-            <Typography variant="h6">¡Empieza a buscar ya!</Typography>
-          </Button>
+          <Link href='/inmuebles'>
+            <Button variant="contained" className={styles.hero_callToAction} color="primary">
+              <Typography variant="h6">¡Empieza a buscar ya!</Typography>
+            </Button>
+          </Link>
       </div>
   );
 }
