@@ -31,9 +31,9 @@ function MyApp({ Component, pageProps }) {
             <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
             <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
           </Head>
+          <UserContextProvider>
           <Navigation/>
           <CssBaseline />
-          <UserContextProvider>
             <Component {...pageProps} />
           </UserContextProvider>
         </ThemeProvider>

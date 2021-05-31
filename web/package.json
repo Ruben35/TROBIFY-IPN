@@ -16,6 +16,7 @@
     "date-fns": "^2.22.1",
     "jss": "latest",
     "next": "^10.2.3",
+    "next-cookies": "^2.0.3",
     "next-images": "^1.7.0",
     "prop-types": "latest",
     "react": "17.0.2",

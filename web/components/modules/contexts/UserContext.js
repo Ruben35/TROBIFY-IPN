@@ -8,12 +8,46 @@ export const UserContextProvider = ({ children }) => {
   const [jwt, setJWT] = useState(
     () => {
       if (typeof window !== "undefined") {
-        localStorage.getItem('jwt')
+        const token=localStorage.getItem('jwt');
+        if(token)
+          document.cookie = `jwt=${token}; path=/;`;
+        
+        return token;
       }
     }
   );
 
-  return <UserContext.Provider value={{jwt, setJWT}}>{children}</UserContext.Provider>;
+  const [userName, setUserName] = useState(
+    () => {
+      if (typeof window !== "undefined") {
+        return localStorage.getItem('user-name')
+      }
+    }
+  );
+
+  const [userEmail, setUserEmail] = useState(
+    () => {
+      if (typeof window !== "undefined") {
+        return localStorage.getItem('user-mail')
+      }
+    }
+  );
+
+  const [userType, setUserType] = useState(
+    () => {
+      if (typeof window !== "undefined") {
+        return localStorage.getItem('user-type')
+      }
+    }
+  );
+
+  return <UserContext.Provider 
+    value={{jwt, setJWT,
+      userName, setUserName,
+      userEmail, setUserEmail,
+      userType, setUserType
+    }}> {children} 
+  </UserContext.Provider>;
 }
 
 export function useUserContext() {

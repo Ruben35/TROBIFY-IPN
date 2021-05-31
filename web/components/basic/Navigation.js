@@ -7,6 +7,8 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Hidden from '@material-ui/core/Hidden'
+import useUser from '../../utils/UserHook';
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
     search: {
@@ -53,6 +55,26 @@ const useStyles = makeStyles((theme) => ({
 
 const Navigation = () =>{
     const classes = useStyles();
+    const router = useRouter();
+    const {isLogged, logout} = useUser();
+
+    const handleLogout = () => {
+      logout();
+      router.push("/");
+    }
+
+    const buttons = isLogged ? 
+      <>
+        <Button variant="outlined" color="inherit" onClick={handleLogout} className='navbar-button'>Logout</Button>
+      </>
+      :
+      <>
+      <Link href="/signin">
+        <Button variant="text" className='navbar-button' color="inherit">Sign In</Button>
+      </Link>
+        <Button variant="outlined" color="inherit">Sign Up</Button>
+      </>;
+      
 
     return (
         <div>
@@ -78,10 +100,8 @@ const Navigation = () =>{
                           />
                       </div>
                       </Hidden>
-                    <Link href="/signin">
-                    <Button variant="text" className='navbar-button' color="inherit">Sign In</Button>
-                    </Link>
-                    <Button variant="outlined" color="inherit">Sign Up</Button>
+                    {buttons}
+                    
                 </ToolBar>
             </AppBar>
         </div>

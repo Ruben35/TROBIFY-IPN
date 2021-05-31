@@ -8,8 +8,11 @@ import React, {useState, useEffect} from 'react';
 import Image from 'next/image'
 import Box from '@material-ui/core/Box'
 import Link from 'next/link'
+import useUser from '../utils/UserHook';
+
 
 export default function Home() {
+
   return (
     <>
       <Head>
@@ -65,6 +68,7 @@ export default function Home() {
 const Hero = () =>{
   const [index, setIndex]= useState(0);
   const [actualImg, setActualImg] = useState("/img/landing/carrusel0.jpg");
+  const {isLogged, userName} = useUser();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -92,7 +96,7 @@ const Hero = () =>{
             Trobify-IPN
           </Typography>
           <Typography variant="h4">
-            El lugar perfecto para buscar el inmueble perfecto.
+            {isLogged?`Bienvenido devuelta, ${userName}`:"El lugar perfecto para buscar el inmueble perfecto."}
           </Typography>
         </Container>
           <Link href='/inmuebles'>

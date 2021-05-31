@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,6 +14,7 @@ import Snackbar from '@material-ui/core/Snackbar'
 import Alert from '@material-ui/lab/Alert'
 import axios from 'axios';
 import useUser from '../../utils/UserHook';
+import {useRouter} from 'next/router'
 
 function Copyright() {
   return (
@@ -64,20 +65,21 @@ export default function SignInSide() {
 
   const [email, setEmail] = useState("");
   const [pswd, setPswd] = useState("");
-  const {isLogged, login} = useUser();
+  const {login} = useUser();
 
   //Aux states
   const [error, setError] = useState(false);
+  const [errorSubmit, setErrorSubmit] = useState(false);
   const [open, setOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState();
 
+  const router = useRouter();
+
   const handleSubmit= (e)=>{
     e.preventDefault();
-    alert(isLogged);
     if(pswd.length<8){
       setError(true);
     }else{
-
       const auth ={
         correo:email,
         contrasena:pswd
@@ -85,9 +87,8 @@ export default function SignInSide() {
 
       axios.post('http://localhost:8000/auth/login', auth)
         .then(res=>{
-          alert("Success");
-          console.log(res);
-          login(res.data.token);
+          login(res.data.nombre,res.data.correo,res.data.tipo,res.data.token);
+          router.push("/");
         })
         .catch(error=>{
           if(error.response){
@@ -104,6 +105,7 @@ export default function SignInSide() {
             setAlertMessage("Error de conexión con servidor");
           }
           setOpen(true);
+          setErrorSubmit(true);
         })
     }
 
@@ -145,7 +147,9 @@ export default function SignInSide() {
                 autoFocus
                 type={pswd}
                 value={email}
+                error={errorSubmit}
                 onChange={(e)=>setEmail(e.target.value)}
+                onBlur={(e)=>setErrorSubmit(false)}
               />
               <TextField
                 variant="outlined"
@@ -157,10 +161,12 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                error={error && pswd.length<8}
+                error={error && pswd.length<8 || errorSubmit}
                 value={pswd}
                 helperText={error && pswd.length<8?"Contraseña de menos de 8 carácteres":""}
                 onChange={(e)=>setPswd(e.target.value)}
+                onBlur={(e)=>setErrorSubmit(false)}
+
               />
               <Button
                 type="submit"
