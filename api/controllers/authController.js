@@ -12,7 +12,7 @@ const login = async(req,res = response ) => {
     //console.log(correo,contrasena);
     const r = await conn.query('select nombre,correo,contrasena from cliente where correo =?',[correo]);
     const ag = await conn.query('select nombre,correo,contrasena from agencia where correo =?',[correo]);
-    console.log(r);
+    //console.log(r);
 
     if(Object.keys(r).length == 0){
 
@@ -22,7 +22,7 @@ const login = async(req,res = response ) => {
 
         })
     }
-
+    
     else{
 
         //verificar
@@ -101,8 +101,6 @@ const login = async(req,res = response ) => {
 
 
     }
-
-    
  
 }
 
@@ -187,13 +185,11 @@ const registrar = async(req,res = response) =>{
 }
 const verificar = (req,resp) =>{
 
-    const {idusuario,nombre} = req;
-
-    //console.log(idusuario,nombre);
+    const {correo,nombre} = req;
 
     return resp.json({
         msg:'muchas gracias por verificarte',
-        idusuario,
+        correo,
         nombre
     })
 
