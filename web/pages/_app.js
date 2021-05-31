@@ -7,6 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../modules/theme'
 import Head from 'next/head'
 import PropTypes from 'prop-types';
+import { UserContextProvider } from "../components/modules/contexts/UserContext";
 
 
 function MyApp({ Component, pageProps }) {
@@ -21,7 +22,9 @@ function MyApp({ Component, pageProps }) {
 
   return( 
   <> 
+    
       <StylesProvider injectFirst>
+
         <ThemeProvider theme={theme}>
           <Head>
             <link rel="preconnect" href="https://fonts.gstatic.com"/>
@@ -30,9 +33,12 @@ function MyApp({ Component, pageProps }) {
           </Head>
           <Navigation/>
           <CssBaseline />
-          <Component {...pageProps} />
+          <UserContextProvider>
+            <Component {...pageProps} />
+          </UserContextProvider>
         </ThemeProvider>
       </StylesProvider>
+    
   </>
   );
   

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +10,10 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
+import axios from 'axios';
+import useUser from '../../utils/UserHook';
 
 function Copyright() {
   return (
@@ -58,72 +62,139 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInSide() {
   const classes = useStyles();
 
+  const [email, setEmail] = useState("");
+  const [pswd, setPswd] = useState("");
+  const {isLogged, login} = useUser();
+
+  //Aux states
+  const [error, setError] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState();
+
+  const handleSubmit= (e)=>{
+    e.preventDefault();
+    alert(isLogged);
+    if(pswd.length<8){
+      setError(true);
+    }else{
+
+      const auth ={
+        correo:email,
+        contrasena:pswd
+      }
+
+      axios.post('http://localhost:8000/auth/login', auth)
+        .then(res=>{
+          alert("Success");
+          console.log(res);
+          login(res.data.token);
+        })
+        .catch(error=>{
+          if(error.response){
+            if(!error.response.data.ok){
+              if(error.response.data.errors){
+                setAlertMessage("Correo y/o contraseña invalidos");
+              }else{
+                setAlertMessage("Correo y/o contraseña incorrectos");
+              }
+            }else{
+              setAlertMessage("Error de servidor: Intente nuevamente más tarde");
+            }
+          }else{
+            setAlertMessage("Error de conexión con servidor");
+          }
+          setOpen(true);
+        })
+    }
+
+    
+  }
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  ¿Olvidaste tu contraseña?
-                </Link>
+    <>
+      <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form} onSubmit={handleSubmit}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                type="email"
+                autoFocus
+                type={pswd}
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                error={error && pswd.length<8}
+                value={pswd}
+                helperText={error && pswd.length<8?"Contraseña de menos de 8 carácteres":""}
+                onChange={(e)=>setPswd(e.target.value)}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"¿No tienes cuenta? ¡Registrate!"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"¿No tienes cuenta? ¡Registrate!"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
-          </form>
-        </div>
+              <Box mt={5}>
+                <Copyright />
+              </Box>
+            </form>
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
+      <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{vertical:"bottom", horizontal:"right"}} onClose={handleAlertClose}>
+          <Alert severity="error" variant="filled" onClose={handleAlertClose}>
+              {alertMessage}
+          </Alert>
+      </Snackbar>
+    </>
   );
 }
