@@ -435,7 +435,7 @@ const registroInmuebleAgencia = async(req, res) => {
         await conn.query("insert into oferta_agencias(inmueble_idinmueble,agencia_correo) value(?,?)",[idInmueble,correo]);
         console.log("Oferta registrada")
         return res.json({
-            mensaje:"Inmueble registrado con exito al cliente"
+            mensaje:"Inmueble registrado con exito a la agencia"
         })
     } catch (error) {
         console.log(error);
