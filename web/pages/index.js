@@ -10,9 +10,8 @@ import Box from '@material-ui/core/Box'
 import Link from 'next/link'
 import useUser from '../utils/UserHook';
 
-
 export default function Home() {
-
+  const {isLogged} = useUser();
   return (
     <>
       <Head>
@@ -48,19 +47,7 @@ export default function Home() {
         <Image src="/img/landing/map.svg" width={2} height={1} layout='responsive' className={styles.whatIsSection_Image}/>
         </Paper>
       </Container>
-      <Typography variant="h3" color="secondary" className={styles.whatIsSection_questionCenter}>
-          ¿Qué esperas para registrarte?
-      </Typography>
-      <Container maxWidth="xs" className={styles.imageContainer}><Image src="/img/landing/building.svg" width={1} height={1} layout='responsive' />
-      </Container>
-        <Box display="flex" justifyContent="center" flexWrap="wrap" mb={8}>
-          <Link href="/registro/cliente">
-            <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
-          </Link>
-          <Link href="/registro/agencia">
-            <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
-          </Link>
-        </Box>
+      {isLogged?"":<ButtonsRegister/>}
     </>
   )
 }
@@ -105,6 +92,27 @@ const Hero = () =>{
             </Button>
           </Link>
       </div>
+  );
+}
+
+const ButtonsRegister = () =>{
+
+  return (
+    <>
+      <Typography variant="h3" color="secondary" className={styles.whatIsSection_questionCenter}>
+        ¿Qué esperas para registrarte?
+      </Typography>
+      <Container maxWidth="xs" className={styles.imageContainer}><Image src="/img/landing/building.svg" width={1} height={1} layout='responsive' />
+      </Container>
+      <Box display="flex" justifyContent="center" flexWrap="wrap" mb={8}>
+        <Link href="/registro/cliente">
+          <Button variant="contained" color="primary" className={styles.finalbutton}>Registrar Usuario</Button>
+        </Link>
+        <Link href="/registro/agencia">
+          <Button variant="outlined" color="primary" className={styles.finalbutton}>Registrar Agencia Inmobiliaria</Button>
+        </Link>
+      </Box>
+    </>
   );
 }
 

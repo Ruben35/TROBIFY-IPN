@@ -8,7 +8,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Head from 'next/head';
 import OkDialog from '../../components/basic/OkDialog';
 import { useRouter } from 'next/router'
-
+import axios from 'axios';
 
 export default function RegistroCliente() {
 
@@ -70,10 +70,38 @@ const Form = () =>{
         )
     }
 
+    const registerClient= ()=>{
+        var bodyFormData = new FormData();
+        bodyFormData.append('nombre',name);
+        bodyFormData.append('appaterno',apPat);
+        bodyFormData.append('apmaterno',apMat);
+        bodyFormData.append('correo',email);
+        bodyFormData.append('contrasena',pswd);
+        bodyFormData.append('image',photo.current.files[0]);
+        
+        axios({
+            method: "post",
+            url: "http://localhost:8000/auth/registro",
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data"}
+        })
+        .then((res) =>{
+            setSuccessDialog(true);
+        })
+        .catch((ex) =>{
+            if(ex.response){
+                setAlertMessage("El correo ya existe en el sistema");
+            }else{
+                setAlertMessage("Error de servidor: Intente nuevamente más tarde");
+            }
+            setOpen(true);
+        })
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         var isPhotoNoEmpty=photo.current.files.length!=1;
-        if(photo.current.files.length!=1 || name==="" || apPat==="" || apMat==="" || email==="" || pswd==="" || confPswd==="" || pswd!=confPswd){
+        if(photo.current.files.length!=1 || name==="" || apPat==="" || apMat==="" || email==="" || pswd==="" || pswd.length<8 || confPswd==="" || pswd!=confPswd){
             if(photo.current.files.length!=1)
                 setAlertMessage("Selecciona una foto");
             else
@@ -83,7 +111,7 @@ const Form = () =>{
             
         }else{
             setIsWrong(false);
-            setSuccessDialog(true);
+            registerClient();
         }
     }
 
@@ -116,7 +144,7 @@ const Form = () =>{
             <Box margin={3}>
                 <Grid container spacing={5} justify="center" >
                     <Grid item> <TextField type="email" error={isWrong && email===""} value={email} onChange={(e)=>{setEmail(e.target.value)}} variant="outlined" label="Correo" helperText={(isWrong && email==="")?"Escriba su correo":""} /></Grid>
-                    <Grid item> <TextField type="password" error={isWrong && pswd===""} value={pswd} onChange={(e)=>{setPswd(e.target.value)}} variant="outlined" label="Contraseña" helperText={(isWrong && pswd==="")?"Escriba su contraseña":""} /></Grid>
+                    <Grid item> <TextField type="password" error={isWrong && (pswd==="" || pswd.length<8)} value={pswd} onChange={(e)=>{setPswd(e.target.value)}} variant="outlined" label="Contraseña" helperText={(isWrong && pswd==="")?"Escriba su contraseña":(isWrong && pswd.length<8)?"Contraseña menor a 8 caracteres":""} /></Grid>
                     <Grid item> <TextField type="password" error={isWrong && (confPswd==="" || confPswd != pswd)} value={confPswd} onChange={(e)=>{setConfPswd(e.target.value)}} variant="outlined" label="Confirmar Contraseña" 
                                 helperText={(isWrong && confPswd==="")?"Confirme su contraseña":((isWrong && confPswd!=pswd)?"Las contraseñas no coinciden":"")} /></Grid>
                 </Grid>
