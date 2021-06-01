@@ -8,22 +8,12 @@ const nodemailer = require("../configs/nodemailer.config");
 const login = async(req,res = response ) => {
 
     const{correo,contrasena} = req.body;
-
-    //console.log(correo,contrasena);
     const r = await conn.query('select nombre,correo,contrasena from cliente where correo =?',[correo]);
     const ag = await conn.query('select nombre,correo,contrasena from agencia where correo =?',[correo]);
     //console.log(r);
+    let resp;
 
-    if(Object.keys(r).length == 0){
-
-        return res.status(400).json({
-            ok:false,
-            msg:'Usuario o contraseña incorrectos'
-
-        })
-    }
-    
-    else{
+    if(Object.keys(r).length != 0){
 
         //verificar
             const password = r[0].contrasena;
@@ -33,7 +23,7 @@ const login = async(req,res = response ) => {
 
             //validar contrasena
             const validar = bcrypt.compareSync(contrasena,password);
-
+            
             if(!validar){
                 return res.status(400).json({
                     ok:false,
@@ -45,30 +35,23 @@ const login = async(req,res = response ) => {
 
                 //generamos el json web Token
                 const token = await generarJWT(correo,nombre);
-                //devolvemos respuesta
-                return res.status(200).json({
+               
+
+                resp = {
                     ok:true,
-                    nombre,
-                    correo,
-                    tipo:'cliente',
+                    nombre: nombre,
+                    correo: correo,
+                    tipo: 'cliente',
                     token
-                })
+
+                }
             }
-            
     }
+    
 
+    if(Object.keys(ag).length != 0){
 
-    if(Object.keys(ag).length == 0){
-
-        return res.status(400).json({
-            ok:false,
-            msg:'Usuario o contraseña incorrectos'
-
-        })
-
-    }
-    else{
-
+    
         //verificar
             const password = ag[0].contrasena;
             //para jwt y respuesta
@@ -89,18 +72,21 @@ const login = async(req,res = response ) => {
 
                 //generamos el json web Token
                 const token = await generarJWT(correo,nombre);
-                //devolvemos respuesta
-                return res.status(200).json({
+
+                resp = {
                     ok:true,
-                    nombre,
-                    correo,
-                    tipo:'agencia',
+                    nombre: nombre,
+                    correo: correo,
+                    tipo: 'agencia',
                     token
-                })
+
+                }
+                 
             }
 
-
     }
+
+    return res.status(200).send(resp);
  
 }
 
@@ -113,9 +99,10 @@ const registrar = async(req,res = response) =>{
 
     try {
 
-        let r = await conn.query('select nombre from cliente where correo =?',[correo]);
+        let r = await conn.query('select * from cliente where correo =?',[correo]);
+        let ag = await conn.query('select * from agencia where correo =?',[correo]);
 
-        if(Object.keys(r).length !=0){
+        if(Object.keys(r).length !=0 || Object.keys(ag).length != 0){
             return res.status(400).json({
                 ok:false,
                 msg:'El correo ya ha sido registrado!'
@@ -123,7 +110,6 @@ const registrar = async(req,res = response) =>{
             })
         }
 
-       
         const newImg ={
             idimagen:idImag,
             path:path
