@@ -1,1 +1,5 @@
-module.exports= {};
+module.exports= {
+    env: {
+        SERVER_URL: process.env.SERVER_URL,
+      },
+};

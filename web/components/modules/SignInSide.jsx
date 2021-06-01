@@ -84,8 +84,7 @@ export default function SignInSide() {
         correo:email,
         contrasena:pswd
       }
-
-      axios.post('http://localhost:8000/auth/login', auth)
+      axios.post(process.env.SERVER_URL+'/auth/login', auth)
         .then(res=>{
           login(res.data.nombre,res.data.correo,res.data.tipo,res.data.token);
           router.push("/");

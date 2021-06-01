@@ -81,7 +81,7 @@ const Form = () =>{
         
         axios({
             method: "post",
-            url: "http://localhost:8000/auth/registro",
+            url: process.env.SERVER_URL+"/auth/registro",
             data: bodyFormData,
             headers: { "Content-Type": "multipart/form-data"}
         })
