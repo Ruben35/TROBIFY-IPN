@@ -8,6 +8,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Head from 'next/head';
 import OkDialog from '../../components/basic/OkDialog';
 import { useRouter } from 'next/router'
+import axios from 'axios'
 
 
 export default function RegistroCliente() {
@@ -73,10 +74,44 @@ const Form = () =>{
         )
     }
 
+    const hanldeRFC = (value) =>{
+        if(value.length<=13){
+            setRFC(value.toUpperCase());
+        }
+    }
+
+    const registerAgencia= ()=>{
+        var bodyFormData = new FormData();
+        bodyFormData.append('nombre', name);
+        bodyFormData.append('correo', email);
+        bodyFormData.append('rfc', rfc);
+        bodyFormData.append('descripcion', description);
+        bodyFormData.append('contrasena', pswd);
+        bodyFormData.append('image', photo.current.files[0]);
+        
+        axios({
+            method: "post",
+            url: process.env.SERVER_URL+"/agencia/registrar",
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data"}
+        })
+        .then((res) =>{
+            setSuccessDialog(true);
+        })
+        .catch((ex) =>{
+            console.log(ex.response);
+            if(ex.response){
+                setAlertMessage("El correo ya existe en el sistema");
+            }else{
+                setAlertMessage("Error de servidor: Intente nuevamente más tarde");
+            }
+            setOpen(true);
+        })
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        var isPhotoNoEmpty=photo.current.files.length!=1;
-        if(photo.current.files.length!=1 || name==="" || rfc==="" || description==="" || description.length>500 || email==="" || pswd==="" || confPswd==="" || pswd!=confPswd){
+        if(photo.current.files.length!=1 || name==="" || rfc==="" || description==="" || description.length>500 || email==="" || pswd==="" || pswd.length<8 || confPswd==="" || pswd!=confPswd){
             if(photo.current.files.length!=1)
                 setAlertMessage("Selecciona una foto");
             else
@@ -86,7 +121,7 @@ const Form = () =>{
             
         }else{
             setIsWrong(false);
-            setSuccessDialog(true);
+            registerAgencia();
         }
     }
 
@@ -110,7 +145,7 @@ const Form = () =>{
             <Box margin={3}>
                 <Grid container spacing={5} justify="center" >
                     <Grid item> <TextField variant="outlined" error={isWrong && name===""} value={name} onChange={(e)=>{setName(e.target.value)}} label="Nombre de la Agencia" helperText={(isWrong && name==="")?"Escriba el nombre de la agencia":""} /></Grid>
-                    <Grid item> <TextField variant="outlined" error={isWrong && rfc===""} value={rfc} onChange={(e)=>{setRFC(e.target.value)}} label="RFC" helperText={(isWrong && rfc==="")?"Escriba el RFC":""} /></Grid>
+                    <Grid item> <TextField variant="outlined" error={isWrong && rfc===""} value={rfc} onChange={(e)=>{hanldeRFC(e.target.value)}} label="RFC" helperText={(isWrong && rfc==="")?"Escriba el RFC":""} /></Grid>
                 </Grid>
                 <Box marginTop={3} display="flex" justifyContent="center">
                     <TextField
@@ -132,7 +167,7 @@ const Form = () =>{
             <Box margin={3}>
                 <Grid container spacing={5} justify="center" >
                     <Grid item> <TextField type="email" error={isWrong && email===""} value={email} onChange={(e)=>{setEmail(e.target.value)}} variant="outlined" label="Correo" helperText={(isWrong && email==="")?"Escriba su correo":""} /></Grid>
-                    <Grid item> <TextField type="password" error={isWrong && pswd===""} value={pswd} onChange={(e)=>{setPswd(e.target.value)}} variant="outlined" label="Contraseña" helperText={(isWrong && pswd==="")?"Escriba su contraseña":""} /></Grid>
+                    <Grid item> <TextField type="password" error={isWrong && (pswd==="" || pswd.length<8)} value={pswd} onChange={(e)=>{setPswd(e.target.value)}} variant="outlined" label="Contraseña" helperText={(isWrong && pswd==="")?"Escriba su contraseña":(isWrong && pswd.length<8)?"Contraseña menor a 8 caracteres":""} /></Grid>
                     <Grid item> <TextField type="password" error={isWrong && (confPswd==="" || confPswd != pswd)} value={confPswd} onChange={(e)=>{setConfPswd(e.target.value)}} variant="outlined" label="Confirmar Contraseña" 
                                 helperText={(isWrong && confPswd==="")?"Confirme su contraseña":((isWrong && confPswd!=pswd)?"Las contraseñas no coinciden":"")} /></Grid>
                 </Grid>

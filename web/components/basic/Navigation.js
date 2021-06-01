@@ -72,7 +72,9 @@ const Navigation = () =>{
       <Link href="/signin">
         <Button variant="text" className='navbar-button' color="inherit">Sign In</Button>
       </Link>
+      <Link href="/registro/cliente">
         <Button variant="outlined" color="inherit">Sign Up</Button>
+      </Link>
       </>;
       
 
