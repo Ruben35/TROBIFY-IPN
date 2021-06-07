@@ -14,6 +14,7 @@ export default function useUser(){
         setUserType(type);
         setJWT(jwt);
         document.cookie = `jwt=${jwt}; path=/;`;
+        document.cookie = `email=${email}; path=/;`;
         if (typeof window !== "undefined") {
             localStorage.setItem('user-name',name);
             localStorage.setItem('user-email',email);
@@ -29,6 +30,7 @@ export default function useUser(){
         setUserType(null);
         setJWT(null); 
         document.cookie = 'jwt=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+        document.cookie = 'email=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
        if (typeof window !== "undefined") {
         localStorage.removeItem('jwt');
         localStorage.removeItem('user-name');
