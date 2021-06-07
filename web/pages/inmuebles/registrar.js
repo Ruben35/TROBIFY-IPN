@@ -142,7 +142,9 @@ const FormNuevoInmueble = ()=>{
         bodyFormData.append('colonia',colonia);
         bodyFormData.append('ciudad',ciudad);
         bodyFormData.append('estado',estado);
-        bodyFormData.append('images', imgs.current.files);        
+        for(var i=0; i<imgs.current.files.length;i++){
+            bodyFormData.append('images', imgs.current.files[i]);        
+        }
     
         var urlReq="";
         if(userType==='cliente')
