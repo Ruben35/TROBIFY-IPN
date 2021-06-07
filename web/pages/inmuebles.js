@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import Link from 'next/link'
+import React from 'react'
 import { Box, Button, Container, Grid, ThemeProvider, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -8,13 +10,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import CloseIcon from '@material-ui/icons/Close';
 import MailIcon from '@material-ui/icons/Mail';
+import IconButton from '@material-ui/core/IconButton'
 import clsx from 'clsx';
 import { useState } from 'react';
 import ItemCard from '../components/basic/ItemCard';
-import { spacing } from '@material-ui/system';
-import Pagination from '../components/basic/PaginationBar'
-import PaginationBar from '../components/basic/PaginationBar';
+import Snackbar from '@material-ui/core/Snackbar';
+
 import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
@@ -31,9 +34,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Inmuebles({ dataInmuebles }){
     const classes = useStyles();
-
     const [filtroOpen, setFiltro] = useState(false);
-
+    const [openSnack, setOpenSnack] = useState(false);
+    const [snackType, setSnackType] = useState("session");
     const list = (anchor) => (
         <div
           className={clsx(classes.list, {
@@ -70,6 +73,15 @@ export default function Inmuebles({ dataInmuebles }){
         setFiltro(open);
       };
 
+      const handleOpenSnackbar = (value) =>{
+        setSnackType(value);
+        setOpenSnack(true);
+      } 
+
+      const handleCloseSnackBar = ()=>{
+        setOpenSnack(false);
+      }
+
     return (
         <>
             <Head>
@@ -96,35 +108,60 @@ export default function Inmuebles({ dataInmuebles }){
                         Ver filtros
                       </Button>
                     </Box>
-                  <PaginationBar count={10} page={2}/>
                   </Box>
                   <Grid container
                     direction="row"
                     justify="center"
                     alignItems="center"
                     spacing={5}>
-                      {/* Agregar Mapping */}
-                    <Grid item>
-                      <ItemCard/>
-                    </Grid>
-                    <Grid item>
-                      <ItemCard/>
-                    </Grid>
-                    <Grid item>
-                      <ItemCard/>
-                    </Grid>
-                    <Grid item>
-                      <ItemCard/>
-                    </Grid>
-                    <Grid item>
-                      <ItemCard/>
-                    </Grid>
+                      {/* ITEMS */}
+                    {
+                      (dataInmuebles===undefined)?
+                      <Box display="flex" alignItems="center" justifyContent="center" height="60vh">
+                        <Typography variant="h3" color="textSecondary">No hay datos</Typography>
+                      </Box>
+                      :
+                      dataInmuebles.map((inmueble, index)=>{
+                        return (
+                        <Grid item key={index}>
+                          <ItemCard 
+                            title={inmueble.titulo}
+                            description={inmueble.descripcion}
+                            imgURL={inmueble.imgs[0]?inmueble.imgs[0].path:""}
+                            idInmueble={inmueble.idinmueble}
+                            openSnackbar={handleOpenSnackbar}
+                          />
+                        </Grid>
+                        );
+                      })
+                    }  
                   </Grid>
                 </Box>
-                <Box display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
-                  <PaginationBar count={10} page={2}/>
-                </Box>
             </Container>
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              open={openSnack}
+              autoHideDuration={3000}
+              onClose={handleCloseSnackBar}
+              message={snackType==="session"?"Inicia sesión para agregar a favoritos":"Solo clientes tienen favoritos"}
+              action={
+                <React.Fragment>
+                  {snackType==="session"?
+                  <Link href="/signin">
+                    <Button color="secondary" size="small" onClick={handleCloseSnackBar}>
+                      SIGN IN
+                    </Button>
+                  </Link>:""
+                  }
+                  <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackBar}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </React.Fragment>
+              }
+            />
         </>
     );
 }
@@ -134,8 +171,9 @@ export async function getServerSideProps(context) {
   try{
     const res = await axios.get(process.env.SERVER_URL+'/inmueble/inmuebles')
     const dataInmuebles = res.data;
-    return { props: {dataInmuebles} }
+    return { props: { dataInmuebles } }
   }catch(error){
+    console.log(error);
     return { props: {} }
   }
 }

@@ -44,5 +44,6 @@ export default function useUser(){
         userName,
         userEmail,
         userType,
+        jwt
     }
 }
