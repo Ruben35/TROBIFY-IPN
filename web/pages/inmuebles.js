@@ -15,6 +15,7 @@ import ItemCard from '../components/basic/ItemCard';
 import { spacing } from '@material-ui/system';
 import Pagination from '../components/basic/PaginationBar'
 import PaginationBar from '../components/basic/PaginationBar';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     list: {
@@ -28,11 +29,11 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-export default function Inmuebles(){
+export default function Inmuebles({ dataInmuebles }){
     const classes = useStyles();
 
     const [filtroOpen, setFiltro] = useState(false);
-    
+
     const list = (anchor) => (
         <div
           className={clsx(classes.list, {
@@ -102,6 +103,7 @@ export default function Inmuebles(){
                     justify="center"
                     alignItems="center"
                     spacing={5}>
+                      {/* Agregar Mapping */}
                     <Grid item>
                       <ItemCard/>
                     </Grid>
@@ -125,4 +127,15 @@ export default function Inmuebles(){
             </Container>
         </>
     );
+}
+
+export async function getServerSideProps(context) {
+
+  try{
+    const res = await axios.get(process.env.SERVER_URL+'/inmueble/inmuebles')
+    const dataInmuebles = res.data;
+    return { props: {dataInmuebles} }
+  }catch(error){
+    return { props: {} }
+  }
 }
