@@ -229,5 +229,117 @@ _Si ocurre algun error (devuelve un JSON) :_
 ![Screenshot](ms.png)
 
 
+## 'inmueble/registroCliente' ®
+_Este endpoint registra un inmueble de parte del cliente_
+_* Peticion Post_
+_* Body esperado :_
+```
+El body a utilizar puede ser de tipo JSON y con los siguientes datos como ejemplo
+{
+    "correo":"correocliente@hotmail.com",
+    "titulo":"se vende bonita casa",
+    "descripcion":"casa en san cristobal no perros",
+    "caracteristicas":"azulejo,boiler y buena vibra xd",
+    "precio":"1521.5",
+    "status":"0",
+    "superficie":"30",
+    "noGarage":"2",
+    "noRecamaras":"3",
+    "noBanios":"1",
+    "propietario":"San martin chanclas",
+    "transaccion":"venta",
+    "cp":"54180",
+    "calle":"Tlatelolco",
+    "noExterior":"17",
+    "noInterior":"2",
+    "colonia":"San Juan",
+    "ciudad":"Tlane",
+    "estado":"Edomex"
+}
+Además, puede recibir multiples imagenes con el nombre "images", que serán las imagenes del inmueble
+
+```
+
+# Respuestas 📢
+_Si el cliente que esta registrando el inmueble, por alguna razón no esta en la base de datos (devuelve un JSON):_
+```
+{
+    "mensaje": "Cliente no encontrado en la BD"
+}
+```
+_Si todo sale correcto (devuelve un JSON):_
+```
+{
+    "mensaje": "Inmueble registrado con exito al cliente"
+}
+```
+
+_Si ocurre algun error (devuelve un JSON) :_
+```
+{
+   
+    "mensaje": "No se completo la petición"
+}
+```
+
+# Capturas de Pruebas
+![Screenshot](registroClienteInmueble.png)
+
+## 'inmueble/registroAgencia' ®
+_Este endpoint registra un inmueble de parte de la Agencia_
+_* Peticion Post_
+_* Body esperado :_
+```
+El body a utilizar puede ser de tipo JSON y con los siguientes datos como ejemplo
+{
+    "correo":"correoagencia@hotmail.com",
+    "titulo":"se vende bonita casa",
+    "descripcion":"casa en san cristobal no perros",
+    "caracteristicas":"azulejo,boiler y buena vibra xd",
+    "precio":"1521.5",
+    "status":"0",
+    "superficie":"30",
+    "noGarage":"2",
+    "noRecamaras":"3",
+    "noBanios":"1",
+    "propietario":"San martin chanclas",
+    "transaccion":"venta",
+    "cp":"54180",
+    "calle":"Tlatelolco",
+    "noExterior":"17",
+    "noInterior":"2",
+    "colonia":"San Juan",
+    "ciudad":"Tlane",
+    "estado":"Edomex"
+}
+Además, puede recibir multiples imagenes con el nombre "images", que serán las imagenes del inmueble
+
+```
+
+# Respuestas 📢
+_Si el cliente que esta registrando el inmueble, por alguna razón no esta en la base de datos (devuelve un JSON):_
+```
+{
+    "mensaje": "Agencia no encontrada en la BD"
+}
+```
+_Si todo sale correcto (devuelve un JSON):_
+```
+{
+    "mensaje": "Inmueble registrado con exito a la agencia"
+}
+```
+
+_Si ocurre algun error (devuelve un JSON) :_
+```
+{
+   
+    "mensaje": "No se completo la petición"
+}
+```
+
+
+
+
 ## Autores ✒️
 * **Ehecatzin Vallejo** - *Endpoints Inmueble* - [catzin](https://github.com/catzin)
