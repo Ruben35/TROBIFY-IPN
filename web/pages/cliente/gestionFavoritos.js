@@ -1,4 +1,4 @@
-import {Box, Typography, Container, Button, Divider, Paper, Grid} from '@material-ui/core'
+import {Box, Typography, Container, Button, Divider, Paper, Grid, Link} from '@material-ui/core'
 import Head from 'next/head'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,7 +17,9 @@ export default function GestionFavoritos(){
             </Box>
             <Container maxWidth="lg">
                 <Box display="flex" justifyContent="flex-end">
+                    <Link href="/cliente/papeleraFavoritos">
                     <Button variant="outlined" startIcon={<DeleteIcon />} color="secondary" size="large" >Ver Papelera</Button>
+                    </Link>
                 </Box>
                 <Box padding={1}/>
                 <Paper elevation={2}>

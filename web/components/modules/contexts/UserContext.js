@@ -28,7 +28,7 @@ export const UserContextProvider = ({ children }) => {
   const [userEmail, setUserEmail] = useState(
     () => {
       if (typeof window !== "undefined") {
-        return localStorage.getItem('user-mail')
+        return localStorage.getItem('user-email')
       }
     }
   );

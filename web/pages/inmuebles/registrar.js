@@ -9,6 +9,8 @@ import { useRef, useState } from 'react';
 import useMediaQuery from '../../utils/CustomHooks'
 import OkDialog from '../../components/basic/OkDialog'
 import { useRouter } from 'next/router'
+import useUser from '../../utils/UserHook'
+import axios from 'axios'
 
 export default function RegistrarInmueble(){
 
@@ -76,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FormNuevoInmueble = ()=>{
     const classes = useStyles();
+    const { userType, userEmail, userName } = useUser();
 
     //Form states
     const [title, setTitle] = useState("");
@@ -109,6 +112,71 @@ const FormNuevoInmueble = ()=>{
 
     let isTabletOrBigger= useMediaQuery("(min-width: 426px)");
 
+
+    const registerInmueble = () => {
+        var bodyFormData = new FormData();
+        bodyFormData.append('correo',userEmail);
+        bodyFormData.append('titulo',title);
+        bodyFormData.append('descripcion',description);
+        bodyFormData.append('caracteristicas',characteristics);
+        bodyFormData.append('precio',precio);
+        bodyFormData.append('status',0);
+        bodyFormData.append('superficie',surface);
+        bodyFormData.append('noGarage',nGarage);
+        bodyFormData.append('noRecamaras',nRooms);
+        bodyFormData.append('noBanios',nBathrooms);
+        var propietary=""
+        if(isPropietary==="Si")
+            propietary=userName;
+        else
+            propietary=propietaryName;
+        bodyFormData.append('propietario',propietary);
+        if(tipoTransaccion===1)
+            bodyFormData.append('transaccion',"Venta");
+        else
+            bodyFormData.append('transaccion',"Alquiler");
+        bodyFormData.append('cp',cp);
+        bodyFormData.append('calle',calle);
+        bodyFormData.append('noExterior',numExt);
+        bodyFormData.append('noInterior',numInt);
+        bodyFormData.append('colonia',colonia);
+        bodyFormData.append('ciudad',ciudad);
+        bodyFormData.append('estado',estado);
+        bodyFormData.append('images', imgs.current.files);        
+    
+        var urlReq="";
+        if(userType==='cliente')
+            urlReq=process.env.SERVER_URL+"/inmueble/registroCliente";
+        else
+            urlReq=process.env.SERVER_URL+"/inmueble/registroAgencia";
+
+        axios({
+            method: "post",
+            url: urlReq,
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data"}
+        })
+        .then((res) =>{
+            console.log(res);
+            if(res.data.mensaje==="Cliente no encontrado en la BD"){
+                console.log("Email: "+userEmail+"UserName"+userName+"userType"+userType);
+                setAlertMessage("No se completo la petición");
+            }else{
+                setSuccessDialog(true);
+            }
+        })
+        .catch((ex) =>{
+            console.log(ex.response);
+            if(ex.response){
+                setAlertMessage("No se completo la petición");
+            }else{
+                setAlertMessage("Error de servidor: Intente nuevamente más tarde");
+            }
+            setOpen(true);
+        })
+
+    }
+
     const handleSubmit = (e) =>{
         e.preventDefault();
         const someoneIsMissing= (title==="" || description==="" || surface==="" || nGarage==="" || nRooms ==="" || nBathrooms==="" ||
@@ -124,7 +192,7 @@ const FormNuevoInmueble = ()=>{
             setOpen(true);
         }else{
             setIsWrong(false);
-            setSuccessDialog(true);
+            registerInmueble();
         }
     }
 

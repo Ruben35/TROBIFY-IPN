@@ -8,7 +8,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Hidden from '@material-ui/core/Hidden'
 import useUser from '../../utils/UserHook';
+import {Divider, Menu, MenuItem} from '@material-ui/core'
 import { useRouter } from 'next/router'
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
     search: {
@@ -56,16 +58,28 @@ const useStyles = makeStyles((theme) => ({
 const Navigation = () =>{
     const classes = useStyles();
     const router = useRouter();
-    const {isLogged, logout} = useUser();
+    const {isLogged, logout, userType} = useUser();
+
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleLogout = () => {
       logout();
+      setAnchorEl(null);
       router.push("/");
     }
 
+    const handleProfileMenuOpen = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+      setAnchorEl(null);
+    };
+
+
     const buttons = isLogged ? 
       <>
-        <Button variant="outlined" color="inherit" onClick={handleLogout} className='navbar-button'>Logout</Button>
+        <Button variant="outlined" color="inherit" onClick={handleProfileMenuOpen} className='navbar-button'>Menu</Button>
       </>
       :
       <>
@@ -76,7 +90,35 @@ const Navigation = () =>{
         <Button variant="outlined" color="inherit">Sign Up</Button>
       </Link>
       </>;
-      
+
+    const isMenuOpen = Boolean(anchorEl);
+
+    const renderMenu = (
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        id="primary-search-account-menu"
+        keepMounted
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
+        <Link href="/inmuebles/gestionInmueble">
+        <MenuItem onClick={handleMenuClose}>Gestionar Inmuebles</MenuItem>
+        </Link>
+        <Link href="/inmuebles/historialVisitas">
+        <MenuItem onClick={handleMenuClose}>Historial de Visitas</MenuItem>
+        </Link>
+        {userType==="cliente"?
+        <Link href="/cliente/gestionFavoritos">
+        <MenuItem onClick={handleMenuClose}>Favoritos</MenuItem>
+        </Link>:""}
+        <Divider/>
+        <MenuItem onClick={handleLogout}><b>Logout</b></MenuItem>
+      </Menu>
+    );  
+
 
     return (
         <div>
@@ -103,9 +145,9 @@ const Navigation = () =>{
                       </div>
                       </Hidden>
                     {buttons}
-                    
                 </ToolBar>
             </AppBar>
+            {renderMenu}
         </div>
     );    
 };

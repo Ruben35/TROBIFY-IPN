@@ -11,6 +11,7 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { Button, Hidden } from '@material-ui/core';
 import useMediaQuery from '../../utils/CustomHooks'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import DeleteIcon from '@material-ui/icons/Delete'
 import {Box} from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SmallCard({title, description}){
+export default function SmallCard({title, description, deleteFav}){
     const classes = useStyles();
     const theme = useTheme();
     const isCellPhone= useMediaQuery();
@@ -64,7 +65,11 @@ export default function SmallCard({title, description}){
                 </Typography>
                 </CardContent>
                     <Box display="flex"  padding={2} width="100%">
+                        {deleteFav?
+                        <Button startIcon={<DeleteIcon/>} variant="outlined" color="primary">Eliminar Completamente</Button>
+                        :
                         <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" color="primary" >Eliminar de Favoritos</Button>
+                        }   
                         <Box display="flex" flexGrow={1} justifyContent="flex-end">
                             <Button color="primary" variant="text">Ver más...</Button>
                         </Box>
