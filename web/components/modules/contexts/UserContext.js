@@ -40,7 +40,11 @@ export const UserContextProvider = ({ children }) => {
   const [userType, setUserType] = useState(
     () => {
       if (typeof window !== "undefined") {
-        return localStorage.getItem('user-type')
+        const type= localStorage.getItem('user-type');
+        if(type)
+          document.cookie= `type=${type}; path=/;`
+          
+        return type;  
       }
     }
   );

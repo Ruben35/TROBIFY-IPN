@@ -60,7 +60,8 @@ export default function GestionFavoritos({ idFavs }){
 export async function getServerSideProps(context) {
     const jwt=cookies(context).jwt
     const email=cookies(context).email;
-    if(jwt){ //logged?
+    const type=cookies(context).type;
+    if(jwt && type==="cliente"){ //logged and client?
         try{
             const res = await axios({
                 method: "get",
@@ -71,7 +72,6 @@ export async function getServerSideProps(context) {
             for(var i=0;i<res.data.res.length;i++){
                 idFavs.push(res.data.res[i].inmueble_idinmueble);
             }
-            console.log(idFavs);
             return { props: { idFavs }}  
         }catch(error){
             console.error(error);
