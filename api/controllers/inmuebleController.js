@@ -145,8 +145,15 @@ const inmueblesAgencia = async (req, res = response) => {
 }
 
 const inmuebleUnitario = async (req, res = response) => {
-    const inmueble_id = req.query.inmueble_id;
-    const obj_inmueble = await conn.query('SELECT * FROM inmueble WHERE idinmueble = ?;', [inmueble_id])
+
+    const inmueble_id = req.params.inmueble_id;
+    const obj_inmueble = await conn.query('SELECT i.titulo , i.descripcion , i.caracteristicas ,i.precio , i.status , i.superficie , i.nGarage , i.nRecamaras , i.nBanios , i.propietario , i.idinmueble ,  t.transaccion ,d.calle , d.numExt, d.numInt,z.colonia, z.ciudad, z.estado , z.cp FROM inmueble i, tipo_transaccion t, direcciones d,  zonas z WHERE t.idtipo_transaccion = i.tipo_transaccion_idtipo_transaccion and d.iddireccion  =  i.direcciones_iddireccion and  z.cp = d.zonas_cp and i.idinmueble = ?',[inmueble_id]);
+    //console.log(obj_inmueble);
+    const imgs = await conn.query('select im.path from imagenes im ,imagenes_inmueble imin where imin.inmueble_idinmueble =? AND im.idimagen = imin.imagenes_idimagen',[inmueble_id ]);
+    
+    obj_inmueble[0]['imgs'] = imgs;
+   
+
     return res.status(200).send(obj_inmueble);
 }
 
