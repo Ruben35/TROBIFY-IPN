@@ -1,18 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
 import { Button, Hidden } from '@material-ui/core';
 import useMediaQuery from '../../utils/CustomHooks'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteIcon from '@material-ui/icons/Delete'
 import {Box} from '@material-ui/core'
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,10 +36,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SmallCard({title, description, deleteFav}){
+export default function SmallCard({deleteFav, idFav}){
     const classes = useStyles();
     const theme = useTheme();
     const isCellPhone= useMediaQuery();
+
+    //States
+    const [title, setTitle] = useState(null);
+    const [description, setDescription ] = useState(null);
+
+    useEffect(async ()=>{
+      if(idFav){
+        const res = await axios.get(process.env.SERVER_URL+"/inmueble?inmueble_id="+idFav);
+        console.log(res);
+      }
+    }, []);
 
     return(
         <Card className={classes.root}>

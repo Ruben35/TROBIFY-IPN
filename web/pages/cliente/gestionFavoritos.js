@@ -3,9 +3,12 @@ import Head from 'next/head'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { makeStyles } from '@material-ui/core/styles';
 import SmallCard from '../../components/basic/SmallCard'
+import cookies from 'next-cookies';
+import axios from 'axios';
 
-export default function GestionFavoritos(){
-
+export default function GestionFavoritos({ idFavs }){
+    
+    console.log(idFavs);
     return(
         <>  
             <Head>
@@ -30,15 +33,13 @@ export default function GestionFavoritos(){
                         <Divider />
                         <Box margin={3}>
                             <Grid container spacing={2} justify="center">
-                                <Grid item>
-                                    <SmallCard/>
-                                </Grid>
-                                <Grid item>
-                                    <SmallCard/>
-                                </Grid>
-                                <Grid item>
-                                    <SmallCard/>
-                                </Grid>
+                                { idFavs.map((id)=>{
+                                    return (
+                                        <Grid item key={id}>
+                                            <SmallCard idFav={id}/>
+                                        </Grid>
+                                    );
+                                })}
                             </Grid>
                         </Box>
                     </Box>
@@ -47,3 +48,34 @@ export default function GestionFavoritos(){
         </>
     );
 }
+
+export async function getServerSideProps(context) {
+    const jwt=cookies(context).jwt
+    const email=cookies(context).email;
+    if(jwt){ //logged?
+        try{
+            const res = await axios({
+                method: "get",
+                url: process.env.SERVER_URL+"/inmueble/favoritos/"+email,
+                headers: { "token": jwt }
+              });
+            var idFavs = [];
+            for(var i=0;i<res.data.res.length;i++){
+                idFavs.push(res.data.res[i].inmueble_idinmueble);
+            }
+            console.log(idFavs);
+            return { props: { idFavs }}  
+        }catch(error){
+            console.error(error);
+        }
+    }else{
+        const { res } = context;
+        res.setHeader("location", "/");
+        res.statusCode = 302;
+        res.end();
+    }
+
+    return {
+      props: {},
+    }
+  }
