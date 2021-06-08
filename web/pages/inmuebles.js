@@ -121,9 +121,9 @@ export default function Inmuebles({ dataInmuebles }){
                         <Typography variant="h3" color="textSecondary">No hay datos</Typography>
                       </Box>
                       :
-                      dataInmuebles.map((inmueble, index)=>{
+                      dataInmuebles.map((inmueble)=>{
                         return (
-                        <Grid item key={index}>
+                        <Grid item key={inmueble.idinmueble}>
                           <ItemCard 
                             title={inmueble.titulo}
                             description={inmueble.descripcion}

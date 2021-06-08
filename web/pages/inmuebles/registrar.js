@@ -11,6 +11,7 @@ import OkDialog from '../../components/basic/OkDialog'
 import { useRouter } from 'next/router'
 import useUser from '../../utils/UserHook'
 import axios from 'axios'
+import cookies from 'next-cookies';
 
 export default function RegistrarInmueble(){
 
@@ -160,7 +161,7 @@ const FormNuevoInmueble = ()=>{
         })
         .then((res) =>{
             console.log(res);
-            if(res.data.mensaje==="Cliente no encontrado en la BD"){
+            if(res.data.mensaje==="Cliente no encontrado en la BD"  || res.data.mensaje==="No se completo la petición"){
                 console.log("Email: "+userEmail+"UserName"+userName+"userType"+userType);
                 setAlertMessage("No se completo la petición");
             }else{
@@ -233,8 +234,10 @@ const FormNuevoInmueble = ()=>{
 
     const handleOnOk = () =>{
         setSuccessDialog(false);
-        router.push("/");
+        router.push("/inmuebles/gestionInmueble");
     }
+
+    const hanldeInputE = (evt) => evt.key === 'e' && evt.preventDefault();
 
     return (
         <form onSubmit={handleSubmit}>
@@ -270,10 +273,10 @@ const FormNuevoInmueble = ()=>{
             <Divider/>
             <Box padding={1}/>
             <Grid container spacing={5} justify="center" >
-                    <Grid item> <TextField type="number" min={0} className={classes.txtsmall} variant="outlined" label="Superficie m²" value={surface} onChange={(e)=>{handleNumber(e.target.value, setSurface)}}   error={isWrong && surface===""} helperText={(isWrong && surface==="")?"Requerido":""} /></Grid>
-                    <Grid item> <TextField type="number" className={classes.txtsmall} variant="outlined" label="No. Garages" value={nGarage} onChange={(e)=>{handleNumber(e.target.value, setNGarage)}}   error={isWrong && nGarage===""} helperText={(isWrong && nGarage==="")?"Requerido":""} /></Grid>
-                    <Grid item> <TextField type="number" className={classes.txtsmall} variant="outlined" label="No. Cuartos" value={nRooms} onChange={(e)=>{handleNumber(e.target.value, setNRooms)}}   error={isWrong && nRooms===""} helperText={(isWrong && nRooms==="")?"Requerido":""} /></Grid>
-                    <Grid item> <TextField type="number" className={classes.txtsmall} variant="outlined" label="No. Baños" value={nBathrooms} onChange={(e)=>{handleNumber(e.target.value, setNBathrooms)}}   error={isWrong && nBathrooms===""} helperText={(isWrong && nBathrooms==="")?"Requerido":""} /></Grid>
+                    <Grid item> <TextField type="number" min={0} className={classes.txtsmall} variant="outlined" label="Superficie m²" value={surface} onChange={(e)=>{handleNumber(e.target.value, setSurface)}} onKeyDown={hanldeInputE} error={isWrong && surface===""} helperText={(isWrong && surface==="")?"Requerido":""} /></Grid>
+                    <Grid item> <TextField type="number" className={classes.txtsmall} variant="outlined" label="No. Garages" value={nGarage} onChange={(e)=>{handleNumber(e.target.value, setNGarage)}} onKeyDown={hanldeInputE}  error={isWrong && nGarage===""} helperText={(isWrong && nGarage==="")?"Requerido":""} /></Grid>
+                    <Grid item> <TextField type="number" className={classes.txtsmall} variant="outlined" label="No. Cuartos" value={nRooms} onChange={(e)=>{handleNumber(e.target.value, setNRooms)}} onKeyDown={hanldeInputE}  error={isWrong && nRooms===""} helperText={(isWrong && nRooms==="")?"Requerido":""} /></Grid>
+                    <Grid item> <TextField type="number" className={classes.txtsmall} variant="outlined" label="No. Baños" value={nBathrooms} onChange={(e)=>{handleNumber(e.target.value, setNBathrooms)}} onKeyDown={hanldeInputE}  error={isWrong && nBathrooms===""} helperText={(isWrong && nBathrooms==="")?"Requerido":""} /></Grid>
             </Grid>
             <div className={classes.center}>
                 <TextField 
@@ -324,10 +327,10 @@ const FormNuevoInmueble = ()=>{
             <Box padding={1}/>
             <Grid container spacing={5} justify="center" >
                     <Grid item> <TextField value={calle} onChange={(e)=>{setCalle(e.target.value)}} variant="outlined" label="Calle" error={(isWrong && calle==="")} helperText={(isWrong && calle==="")?"Requerido":""} /></Grid>
-                    <Grid item> <TextField value={numExt} onChange={(e)=>{setNumExt(e.target.value)}} variant="outlined" label="No. Exterior" error={(isWrong && numExt==="")} helperText={(isWrong && numExt==="")?"Requerido":""} /></Grid>
-                    <Grid item> <TextField value={numInt} onChange={(e)=>{setNumInt(e.target.value)}} variant="outlined" label="No. Interior"/></Grid>
+                    <Grid item> <TextField value={numExt} type="number" onChange={(e)=>{handleNumber(e.target.value, setNumExt)}} onKeyDown={hanldeInputE} variant="outlined" label="No. Exterior" error={(isWrong && numExt==="")} helperText={(isWrong && numExt==="")?"Requerido":""} /></Grid>
+                    <Grid item> <TextField value={numInt} type="number" onChange={(e)=>{handleNumber(e.target.value, setNumInt)}} onKeyDown={hanldeInputE} variant="outlined" label="No. Interior"/></Grid>
                     <Grid item> <TextField value={colonia} onChange={(e)=>{setColonia(e.target.value)}} variant="outlined" label="Colonia" error={(isWrong && colonia==="")} helperText={(isWrong && colonia==="")?"Requerido":""} /></Grid>
-                    <Grid item> <TextField value={cp} onChange={handleCP} variant="outlined" label="Código Postal" error={(isWrong && cp==="")} helperText={(isWrong && cp==="")?"Requerido":""} /></Grid>
+                    <Grid item> <TextField value={cp} type="number" onChange={handleCP} onKeyDown={hanldeInputE} variant="outlined" label="Código Postal" error={(isWrong && cp==="")} helperText={(isWrong && cp==="")?"Requerido":""} /></Grid>
                     <Grid item> <TextField value={ciudad} onChange={(e)=>{setCiudad(e.target.value)}} variant="outlined" label="Ciudad" error={(isWrong && ciudad==="")} helperText={(isWrong && ciudad==="")?"Requerido":""} /></Grid>
                     <Grid item> <TextField value={estado} onChange={(e)=>{setEstado(e.target.value)}} variant="outlined" label="Estado" error={(isWrong && estado==="")} helperText={(isWrong && estado==="")?"Requerido":""} /></Grid>
             </Grid>
@@ -349,7 +352,7 @@ const FormNuevoInmueble = ()=>{
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid item> <TextField value={precio} type="number" className={classes.selectBigger} onChange={(e)=>{handleNumber(e.target.value,setPrecio)}} variant="outlined" label="Precio MXN" error={(isWrong && precio==="")} helperText={(isWrong && precio==="")?"Requerido":""} /></Grid>
+                <Grid item> <TextField value={precio} type="number" className={classes.selectBigger} onChange={(e)=>{handleNumber(e.target.value,setPrecio)}} onKeyDown={hanldeInputE} variant="outlined" label="Precio MXN" error={(isWrong && precio==="")} helperText={(isWrong && precio==="")?"Requerido":""} /></Grid>
             </Grid>
             <Box padding={1}/>
             <Typography variant="h5">Fotos del Inmueble</Typography>
@@ -407,3 +410,15 @@ const FormNuevoInmueble = ()=>{
         </form>
     );
 }
+
+export async function getServerSideProps(context) {
+    if(!cookies(context).jwt){ //Reload?
+        const { res } = context;
+        res.setHeader("location", "/");
+        res.statusCode = 302;
+        res.end();
+    }
+    return {
+      props: {},
+    }
+  }

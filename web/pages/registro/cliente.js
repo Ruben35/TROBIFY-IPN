@@ -9,6 +9,7 @@ import Head from 'next/head';
 import OkDialog from '../../components/basic/OkDialog';
 import { useRouter } from 'next/router'
 import axios from 'axios';
+import cookies from 'next-cookies'
 
 export default function RegistroCliente() {
 
@@ -184,3 +185,15 @@ const Form = () =>{
         </form>     
     );
 }
+
+export async function getServerSideProps(context) {
+    if(cookies(context).jwt){ //Reload?
+        const { res } = context;
+        res.setHeader("location", "/");
+        res.statusCode = 302;
+        res.end();
+    }
+    return {
+      props: {},
+    }
+  }

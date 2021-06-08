@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Box, Button, Container, Grid, ThemeProvider, Typography } from '@material-ui/core';
+import { Box, Button, Container, Grid, Link, ThemeProvider, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
 import { spacing } from '@material-ui/system';
@@ -13,6 +13,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import { red } from '@material-ui/core/colors';
+import cookies from 'next-cookies';
+import axios from 'axios';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,24 +29,30 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function gestion() {
+export default function gestion( { dataInmuebles } ) {
     const classes = useStyles();
-    const CardGestion = ({ }) => {
+    const CardGestion = ({ title, description, idInmueble , imgURL}) => {
+
+        const img= (imgURL!="" && imgURL!=undefined)?process.env.SERVER_URL+"\\"+imgURL:"/img/landing/carrusel0.jpg";
+
         return (<Card className={classes.root}>
             <CardActionArea>
                 <CardMedia
                     component="img"
                     alt="Titulo de Inmueble"
                     height="140"
-                    image="/img/landing/carrusel0.jpg"
+                    image={img}
                     title="Titulo de Inmueble"
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        Titulo de Inmueble </Typography>
+                        {title?title:"Titulo del Inmueble"} </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero eros.
-              </Typography>
+                    {description?
+                    (description.length>200)?description.substring(0,197)+"..."
+                        :description
+                    :"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero eros."}
+                    </Typography>
                 </CardContent>
             </CardActionArea>
             <CardActions>
@@ -69,7 +78,12 @@ export default function gestion() {
             <Box minHeight="64px"></Box>
             <Container maxWidth="lg">
                 <Box display="flex" flexDirection="row" mt={2} mb={2}>
-                    <Typography variant="h4" color="secondary">Tus inmuebles</Typography>
+                    <Box flexGrow={1}>
+                        <Typography variant="h4" color="secondary">Tus inmuebles</Typography>
+                    </Box>
+                    <Link href="/inmuebles/registrar">
+                        <Button variant="contained" size="large" color="secondary">Registrar Nuevo Inmueble</Button>
+                    </Link>
                 </Box>
                 <Box mt={2}>
                     <Box display="flex" alignItems="center" justifyContent="flex-end" mb={2}>
@@ -79,31 +93,63 @@ export default function gestion() {
                         justify="center"
                         alignItems="center"
                         spacing={5}>
-                        <Grid item>
-                            <CardGestion></CardGestion>
+                     {/* ITEMS */}
+                     {
+                      (dataInmuebles===undefined)?
+                      <Box display="flex" alignItems="center" justifyContent="center" height="60vh">
+                        <Typography variant="h3" color="textSecondary">No hay datos</Typography>
+                      </Box>
+                      :
+                      dataInmuebles.map((inmueble)=>{
+                        return (
+                        <Grid item key={inmueble.idinmueble}>
+                            <CardGestion
+                                title={inmueble.titulo}
+                                description={inmueble.descripcion}
+                                imgURL={inmueble.imgs[0]?inmueble.imgs[0].path:""}
+                                idInmueble={inmueble.idinmueble}
+                            />
                         </Grid>
-                        <Grid item>
-                            <CardGestion></CardGestion>
-                        </Grid>
-                        <Grid item>
-                            <CardGestion></CardGestion>
-                        </Grid>
-                        <Grid item>
-                            <CardGestion></CardGestion>
-                        </Grid>
-                        <Grid item>
-                            <CardGestion></CardGestion>
-                        </Grid>
-                        <Grid item>
-                            <CardGestion></CardGestion>
-                        </Grid>
-
+                        );
+                      })
+                    }  
                     </Grid>
-                </Box>
-                <Box display="flex" alignItems="center" justifyContent="center" mt={2} mb={2}>
-                    <PaginationBar count={10} page={1} />
                 </Box>
             </Container>
         </>
     );
 }
+
+export async function getServerSideProps(context) {
+    const jwt=cookies(context).jwt
+    const email=cookies(context).email;
+    const type=cookies(context).type;
+    if(jwt){ //logged?
+        var reqURL=process.env.SERVER_URL;
+        if(type==="cliente")
+            reqURL+=`/inmueble/inmueblesCliente/${email}`;
+        else
+            reqURL+=`/inmueble/inmueblesAgencia/${email}`;
+        try{
+            const res = await axios({
+                method: "get",
+                url: reqURL,
+              });
+            
+            const dataInmuebles = res.data;
+
+            return { props: { dataInmuebles }}  
+        }catch(error){
+            console.error(error);
+        }
+    }else{
+        const { res } = context;
+        res.setHeader("location", "/");
+        res.statusCode = 302;
+        res.end();
+    }
+
+    return {
+      props: {},
+    }
+  }

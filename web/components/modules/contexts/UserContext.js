@@ -28,7 +28,7 @@ export const UserContextProvider = ({ children }) => {
   const [userEmail, setUserEmail] = useState(
     () => {
       if (typeof window !== "undefined") {
-        const email= localStorage.getItem('user-mail');
+        const email= localStorage.getItem('user-email');
         if(email)
           document.cookie= `email=${email}; path=/;`
 
@@ -43,7 +43,7 @@ export const UserContextProvider = ({ children }) => {
         const type= localStorage.getItem('user-type');
         if(type)
           document.cookie= `type=${type}; path=/;`
-          
+
         return type;  
       }
     }
