@@ -7,8 +7,7 @@ import cookies from 'next-cookies';
 import axios from 'axios';
 
 export default function GestionFavoritos({ idFavs }){
-    
-    console.log(idFavs);
+
     return(
         <>  
             <Head>
@@ -33,10 +32,19 @@ export default function GestionFavoritos({ idFavs }){
                         <Divider />
                         <Box margin={3}>
                             <Grid container spacing={2} justify="center">
-                                { idFavs.map((id)=>{
+                                { 
+                                
+                                (idFavs.length===0 || idFavs===undefined)?
+                                <Box display="flex" alignItems="center" justifyContent="center" height="40vh">
+                                    <Typography variant="h3" color="textSecondary">No hay datos</Typography>
+                                </Box>
+                                :
+                                idFavs.map((id)=>{
                                     return (
                                         <Grid item key={id}>
-                                            <SmallCard idFav={id}/>
+                                            <SmallCard 
+                                             idFav={id}
+                                             />
                                         </Grid>
                                     );
                                 })}

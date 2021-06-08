@@ -10,6 +10,9 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteIcon from '@material-ui/icons/Delete'
 import {Box} from '@material-ui/core'
 import axios from 'axios'
+import YesNoDialog from './YesNoDialog';
+import useFavourite from '../../utils/favouriteHooks';
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,52 +41,88 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SmallCard({deleteFav, idFav}){
     const classes = useStyles();
-    const theme = useTheme();
-    const isCellPhone= useMediaQuery();
+    const router = useRouter();
+    const {trashFavourite} = useFavourite();
 
     //States
     const [title, setTitle] = useState(null);
     const [description, setDescription ] = useState(null);
+    const [imageURL, setImageURL] = useState("/img/landing/carrusel0.jpg");
+
+    //AuxStates
+    const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(async ()=>{
       if(idFav){
-        const res = await axios.get(process.env.SERVER_URL+"/inmueble?inmueble_id="+idFav);
-        console.log(res);
+        const res = await axios.get(process.env.SERVER_URL+"/inmueble/unitario/"+idFav);
+        setTitle(res.data[0].titulo);
+        setDescription(res.data[0].descripcion);
+        var imgURL="";
+        try{
+          imgURL=process.env.SERVER_URL+"/"+res.data[0].imgs[0].path.replace("\\","/");
+        }catch(er){
+          imgURL="/img/landing/carrusel0.jpg";
+        }
+        setImageURL(imgURL);
       }
     }, []);
 
+    const handleNoDialog = () =>{
+      setOpenDialog(false);
+    }
+
+    const handleYesDialog = async() =>{
+      if(deleteFav){
+
+      }else{
+        await trashFavourite(idFav);
+        router.replace(router.asPath);
+      }
+
+      setOpenDialog(false);
+    }
+
     return(
-        <Card className={classes.root}>
-            <Hidden only="xs">
-                <CardMedia
-                    className={classes.cover}
-                    image="/img/landing/carrusel0.jpg"
-                    title="Live from space album cover"
-                />
-            </Hidden>
-            <div className={classes.details}>
-                <CardContent className={classes.content}>
-                <Typography component="h5" variant="h6">
-                    {title?title:"Titulo de Inmueble"}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                    {description?
-                    (description.length>200?description.substring(0,197)+"...":description)
-                    :"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero."}
-                </Typography>
-                </CardContent>
-                    <Box display="flex"  padding={2} width="100%">
-                        {deleteFav?
-                        <Button startIcon={<DeleteIcon/>} variant="outlined" color="primary">Eliminar Completamente</Button>
-                        :
-                        <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" color="primary" >Eliminar de Favoritos</Button>
-                        }   
-                        <Box display="flex" flexGrow={1} justifyContent="flex-end">
-                            <Button color="primary" variant="text">Ver más...</Button>
-                        </Box>
-                    </Box>
-            </div>
-            </Card>
-            // Agregar Dialog
+        <> 
+          <Card className={classes.root}>
+              <Hidden only="xs">
+                  <CardMedia
+                      className={classes.cover}
+                      image={imageURL}
+                      title={title}
+                  />
+              </Hidden>
+              <div className={classes.details}>
+                  <CardContent className={classes.content}>
+                  <Typography component="h5" variant="h6">
+                      {title?title:"Titulo de Inmueble"}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                      {description?
+                      (description.length>200?description.substring(0,197)+"...":description)
+                      :"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero."}
+                  </Typography>
+                  </CardContent>
+                      <Box display="flex"  padding={2} width="100%">
+                          {deleteFav?
+                          <Button startIcon={<DeleteIcon/>} variant="outlined" color="primary">Eliminar Completamente</Button>
+                          :
+                          <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" color="primary" onClick={()=>{setOpenDialog(true);}} >Eliminar de Favoritos</Button>
+                          }   
+                          <Box display="flex" flexGrow={1} justifyContent="flex-end">
+                              <Button color="primary" variant="text">Ver más...</Button>
+                          </Box>
+                      </Box>
+              </div>
+              </Card>
+              <YesNoDialog
+                title={`Eliminar de favoritos...`}
+                description={`Seguro que quieres enviar a papelera al inmueble "${title}"`}
+                openDialog={openDialog}
+                handleYes={handleYesDialog}
+                handleNo={handleNoDialog}
+                yesText="Sí, seguro!"
+              />
+            </>
     );
 }
