@@ -15,7 +15,7 @@ const getAllInmuebles = async (req, res = response) => {
         }
 
         for (j of data) {
-            let r = await conn.query('select im.path from imagenes im ,imagenes_inmueble imin where imin.inmueble_idinmueble =? AND im.idimagen = imin.imagenes_idimagen ', [j.idinmueble]);
+            let r = await conn.query('select im.path from imagenes im ,imagenes_inmueble imin where imin.inmueble_idinmueble =? AND im.idimagen = imin.imagenes_idimagen', [j.idinmueble]);
             for (k of r) {
                 j['imgs'].push(k);
             }
@@ -67,7 +67,7 @@ const inmueblesCliente = async (req, res = response) => {
         for (k of inmcliente) { k['imgs'] = []; k['servicios'] = []; }
 
         for (j of inmcliente) {
-            let r = await conn.query('select imagenes_idimagen from imagenes_inmueble where inmueble_idinmueble =?', [j.idinmueble]);
+            let r = await conn.query('select im.path from imagenes im ,imagenes_inmueble imin where imin.inmueble_idinmueble =? AND im.idimagen = imin.imagenes_idimagen', [j.idinmueble]);
             for (k of r) {
                 j['imgs'].push(k);
             }
@@ -120,7 +120,7 @@ const inmueblesAgencia = async (req, res = response) => {
     for (k of inmcliente) { k['imgs'] = []; k['servicios'] = []; }
 
     for (j of inmcliente) {
-        let r = await conn.query('select imagenes_idimagen from imagenes_inmueble where inmueble_idinmueble =?', [j.idinmueble]);
+        let r = await conn.query('select im.path from imagenes im ,imagenes_inmueble imin where imin.inmueble_idinmueble =? AND im.idimagen = imin.imagenes_idimagen', [j.idinmueble]);
         for (k of r) {
             j['imgs'].push(k);
         }

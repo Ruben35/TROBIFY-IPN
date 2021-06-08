@@ -30,7 +30,7 @@ router.get('/:propietario/:texto/:page', getInmuebles); //* traer todo
 router.get('/favoritos/:correo',validarJWT,getFavoritos);
 router.post('/agregarFavorito',validarJWT,agregarFavorito);
 router.post('/eliminarFavorito',validarJWT,eliminarFavorito);
-// ?precio_inf=1&precio_sup=2
+// ?precio_inf=1&precio_sup=2q
 //router.post('/inmueble/visita/agendar',agendarVisita);
 
 /* -------- VISITIAS ---------- */
