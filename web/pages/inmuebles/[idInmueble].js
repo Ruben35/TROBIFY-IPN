@@ -74,27 +74,11 @@ export default function verInmueble( { inmuebleData, servicesData } ){
     const isSmall = useMediaQuery("(max-width: 769px)");
 
     //States
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [surface, setSurface] = useState("");
-    const [nGarage, setNGarage] = useState("");
-    const [nRooms, setNRooms] = useState("");
-    const [nBathrooms, setNBathrooms] = useState("");
-    const [characteristics, setCharacteristics] = useState("");
     const [propietaryName, setPropietaryName] = useState("");
-    const [calle, setCalle] = useState("");
-    const [numExt, setNumExt] = useState("");
-    const [numInt, setNumInt] = useState("");
-    const [colonia, setColonia] = useState("");
-    const [cp, setCP] = useState("");
-    const [ciudad, setCiudad] = useState("");
-    const [estado, setEstado] = useState("");
-    const [tipoTransaccion, setTipoTransaccion] = useState("");
-    const [precio, setPrecio] = useState("");
     const [correo, setCorreo] = useState("");
     const tileData=tileDataExample;
 
-    const direccion = `${calle} No. ${numExt} ${numInt?"No. Int"+numInt:""}, ${colonia}, ${cp} ${ciudad}, ${estado}`;
+    const direccion = `${inmuebleData.calle} No. ${inmuebleData.numExt} ${inmuebleData.numInt?"No. Int"+inmuebleData.numInt:""}, ${inmuebleData.colonia}, ${inmuebleData.cp} ${inmuebleData.ciudad}, ${inmuebleData.estado}`;
 
     const services=servicesData?formatServices():[];
     console.log(servicesData);
@@ -128,12 +112,12 @@ export default function verInmueble( { inmuebleData, servicesData } ){
     return (
         <>
             <Head>
-                <title>Trobify: Inmueble "{title}"</title>
+                <title>Trobify: Inmueble "{inmuebleData.titulo?inmuebleData.titulo:"Título del Inmueble"}"</title>
             </Head>
             <Box minHeight="64px"></Box>
             <Container maxWidth="lg">
                 <Box display="flex" justifyContent="center" textAlign="center" marginTop={1} marginBottom={1}>
-                    <Typography variant="h3">{title?title:"Título del Inmueble"}</Typography>
+                    <Typography variant="h3">{inmuebleData.titulo?inmuebleData.titulo:"Título del Inmueble"}</Typography>
                 </Box>
                 <Paper elevation={3}>
                     <Box padding={3} paddingBottom={6}>
@@ -174,12 +158,12 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                                  display="inline-block" 
                                                  padding="5px 10px 5px 10px" 
                                                  borderRadius="30px">
-                                                    <b>{tipoTransaccion?tipoTransaccion:"Venta"}</b>
+                                                    <b>{inmuebleData.transaccion?inmuebleData.transaccion:"Venta"}</b>
                                             </Box>
                                         </Box>
                                         <Box textAlign="center">
                                             <Typography variant="h4" color="secondary">
-                                                <b>Precio:</b> ${precio?precio.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","):"4,000,000,123"} MXN
+                                                <b>Precio:</b> ${inmuebleData.precio?inmuebleData.precio.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","):"4,000,000,123"} MXN
                                             </Typography>
                                         </Box>
                                     </Box>
@@ -188,7 +172,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                         <Divider/>
                                         <Typography variant="body1">
                                             <Box marginTop={1}>
-                                            {description?description:lorem}
+                                            {inmuebleData.descripcion?inmuebleData.descripcion:lorem}
                                             </Box>
                                         </Typography>
                                     </Box>
@@ -199,20 +183,20 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                             <Box paddingTop={2} paddingBottom={2} paddingLeft={1} paddingRight={1} textAlign="center">
                                                 <Grid container spacing={1}>
                                                     <Grid item xs>
-                                                        <b>Superficie: </b> <br/>{surface?surface:"400"} m²
+                                                        <b>Superficie: </b> <br/>{inmuebleData.superficie?inmuebleData.superficie:"400"} m²
                                                     </Grid>
                                                     <Grid item xs>
-                                                        <b>Garages: </b> <br/>{nGarage?nGarage:"2"} 
+                                                        <b>Garages: </b> <br/>{inmuebleData.nGarage?inmuebleData.nGarage:"2"} 
                                                     </Grid>
                                                     <Grid item xs>
-                                                        <b>Cuartos: </b> <br/>{nRooms?nRooms:"8"}
+                                                        <b>Cuartos: </b> <br/>{inmuebleData.nRecamaras?inmuebleData.nRecamaras:"8"}
                                                     </Grid>
                                                     <Grid item xs>
-                                                        <b>Baños: </b> <br/>{nBathrooms?nBathrooms:"2"}
+                                                        <b>Baños: </b> <br/>{inmuebleData.nBanios?inmuebleData.nBanios:"2"}
                                                     </Grid>
                                                 </Grid>
                                             </Box>
-                                            {characteristics?characteristics:lorem}
+                                            {inmuebleData.caracteristicas?inmuebleData.caracteristicas:lorem}
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -225,7 +209,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                     <Divider/> 
                                     <Typography variant="body1">
                                         <Box marginTop={1}>
-                                        {calle?direccion:"Av. 678 No. 22 No. Int 542, San Juanico, 02355 Ciudad de México, CDMX"}
+                                        {inmuebleData.calle?direccion:"Av. 678 No. 22 No. Int 542, San Juanico, 02355 Ciudad de México, CDMX"}
                                         </Box>
                                     </Typography>
                                 </Box>
@@ -280,7 +264,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                 <Divider/> 
                                     <Box padding={2} display="flex" flexDirection="column" justifyContent="center" textAlign="center">
                                         <Typography variant="body1">
-                                            <b>Propietario: </b><br/>{propietaryName?propietaryName:"Nombre Apellido Apellido"}
+                                            <b>Propietario: </b><br/>{inmuebleData.propietario?inmuebleData.propietario:"Nombre Apellido Apellido"}
                                         </Typography>
                                         <br/>
                                         <Typography variant="body1">
@@ -344,20 +328,23 @@ export async function getServerSideProps(context) {
     const idInmueble=context.query.idInmueble;
     try{
         const resInmuebleUnit= await axios.get(process.env.SERVER_URL+'/inmueble/unitario/'+idInmueble);
-        const inmuebleData= resInmuebleUnit.data[0];
-        console.log(inmuebleData);
+        if(!resInmuebleUnit.data.ok){
+            throw new Error("No existe el inmueble");
+        }
+        const inmuebleData= resInmuebleUnit.data.data;
 
         var servicesData;
         const resServicios= await axios.get(process.env.SERVER_URL+'/inmueble/mostrarServicios/'+inmuebleData.cp).catch(()=> {return []});
         if(resServicios!=[]){
             servicesData=resServicios.data.servicios;
         }
+        console.log( inmuebleData );
         console.log( servicesData );
         return {
-            props: { inmuebleData, servicesData }
+            props: { inmuebleData, servicesData}
         }
     }catch(er){
-        //! FALTA MANEJAR ERROR DE NO EXISTE IDINMUEBLE (404)
+        console.log(er);
         const { res } = context;
         res.setHeader("location", "/404");
         res.statusCode = 302;
