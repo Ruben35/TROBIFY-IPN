@@ -5,9 +5,9 @@ import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import ImageZoom from 'react-medium-image-zoom'
 import useMediaQuery from '../../utils/CustomHooks';
-import theme from '../../modules/theme';
 import ScrollDialog from '../../components/basic/ScrollDialog';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import axios from 'axios';
 
 //*STYLES
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 //* EXAMPLES
 const lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu";
 
-const tileData =[
+const tileDataExample =[
     {
         title:"img1",
         img:"/img/landing/carrusel0.jpg"
@@ -65,43 +65,8 @@ const tileData =[
     },
 ]
 
-const servicesData =[
-    {
-        tipoServicio:"Ferreteria",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-    {
-        tipoServicio:"Floreria",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-    {
-        tipoServicio:"Ferreteria",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-    {
-        tipoServicio:"Carniceria",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-    {
-        tipoServicio:"Plomeria",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-    {
-        tipoServicio:"Ferreteria",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-    {
-        tipoServicio:"Plomeria",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-    {
-        tipoServicio:"Mecanico",
-        description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean m"
-    },
-]
-
 //* PAGE
-export default function verInmueble(){
+export default function verInmueble( { inmuebleData, servicesData } ){
     const router = useRouter();
     const { idInmueble } = router.query;
     const classes = useStyles();
@@ -127,10 +92,12 @@ export default function verInmueble(){
     const [tipoTransaccion, setTipoTransaccion] = useState("");
     const [precio, setPrecio] = useState("");
     const [correo, setCorreo] = useState("");
+    const tileData=tileDataExample;
 
     const direccion = `${calle} No. ${numExt} ${numInt?"No. Int"+numInt:""}, ${colonia}, ${cp} ${ciudad}, ${estado}`;
 
     const services=servicesData?formatServices():[];
+    console.log(servicesData);
 
     //AuxStates
     const [actualTile, setActualTile] = useState(tileData[0]);
@@ -138,22 +105,23 @@ export default function verInmueble(){
 
     //Functions
     function formatServices(){
-        let array=servicesData.sort((a,b)=>{return a.tipoServicio>b.tipoServicio?1:-1});
-
+        let array=servicesData.sort((a,b)=>{return a.servicio>b.servicio?1:-1});
+        console.log(array);
         let newServices = [];
         let obj = new Object();
-        obj.serviceType=array[0].tipoServicio;
+        obj.serviceType=array[0].servicio;
         obj.services=[];
         for(let elem of array){
-            if(elem.tipoServicio!=obj.serviceType){
+            if(elem.servicio!=obj.serviceType){
                 newServices.push(obj);
                 obj=new Object();
-                obj.serviceType=elem.tipoServicio;
+                obj.serviceType=elem.servicio;
                 obj.services=[];
             }                
-            obj.services.push(elem.description);   
+            obj.services.push(elem.descripcion);   
         }
-
+        newServices.push(obj);
+        console.log(newServices);
         return newServices;
     }
 
@@ -370,4 +338,32 @@ export default function verInmueble(){
             />
         </>
     );
+}
+
+export async function getServerSideProps(context) {
+    const idInmueble=context.query.idInmueble;
+    try{
+        const resInmuebleUnit= await axios.get(process.env.SERVER_URL+'/inmueble/unitario/'+idInmueble);
+        const inmuebleData= resInmuebleUnit.data[0];
+        console.log(inmuebleData);
+
+        var servicesData;
+        const resServicios= await axios.get(process.env.SERVER_URL+'/inmueble/mostrarServicios/'+inmuebleData.cp).catch(()=> {return []});
+        if(resServicios!=[]){
+            servicesData=resServicios.data.servicios;
+        }
+        console.log( servicesData );
+        return {
+            props: { inmuebleData, servicesData }
+        }
+    }catch(er){
+        //! FALTA MANEJAR ERROR DE NO EXISTE IDINMUEBLE (404)
+        const { res } = context;
+        res.setHeader("location", "/404");
+        res.statusCode = 302;
+        res.end();
+    }
+    return {
+        props: {}
+    }
 }

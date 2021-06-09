@@ -460,7 +460,7 @@ const registrarServicioZona = async(req,resp) =>{
     // body , se ser la cadena del nombre osea --> servicio : patito , y la zona zona: patito
     const {servicio,descripcion,zona} = req.body;
     //obtengo id de ese servicio
-
+    console.log(servicio+"|"+zona+"|"+descripcion)
     //seleccionar max de la tabla servicios para calcular el id
     const maxid = await conn.query('select MAX(idservicios) as id FROM servicios'); 
     let idservicios = maxid[0].id;
@@ -488,7 +488,7 @@ const registrarServicioZona = async(req,resp) =>{
         })
         
     } catch (error) {
-
+        console.error(error);
         return resp.json({
             ok : false,
             msg:"Matenga la calma y comuniquese con su programador backend mas cercano"
