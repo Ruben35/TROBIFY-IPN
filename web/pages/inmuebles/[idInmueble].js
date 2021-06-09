@@ -7,6 +7,7 @@ import ImageZoom from 'react-medium-image-zoom'
 import useMediaQuery from '../../utils/CustomHooks';
 import theme from '../../modules/theme';
 import ScrollDialog from '../../components/basic/ScrollDialog';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 //*STYLES
 const useStyles = makeStyles((theme) => ({
@@ -124,7 +125,8 @@ export default function verInmueble(){
     const [ciudad, setCiudad] = useState("");
     const [estado, setEstado] = useState("");
     const [tipoTransaccion, setTipoTransaccion] = useState("");
-    const [precio, setPrecio] = useState("4324825784");
+    const [precio, setPrecio] = useState("");
+    const [correo, setCorreo] = useState("");
 
     const direccion = `${calle} No. ${numExt} ${numInt?"No. Int"+numInt:""}, ${colonia}, ${cp} ${ciudad}, ${estado}`;
 
@@ -204,7 +206,7 @@ export default function verInmueble(){
                                                  display="inline-block" 
                                                  padding="5px 10px 5px 10px" 
                                                  borderRadius="30px">
-                                                    <b>Venta</b>
+                                                    <b>{tipoTransaccion?tipoTransaccion:"Venta"}</b>
                                             </Box>
                                         </Box>
                                         <Box textAlign="center">
@@ -308,6 +310,27 @@ export default function verInmueble(){
                                 <Box padding={2}>
                                 <Typography variant={'h5'}><b>Propietario</b></Typography>
                                 <Divider/> 
+                                    <Box padding={2} display="flex" flexDirection="column" justifyContent="center" textAlign="center">
+                                        <Typography variant="body1">
+                                            <b>Propietario: </b><br/>{propietaryName?propietaryName:"Nombre Apellido Apellido"}
+                                        </Typography>
+                                        <br/>
+                                        <Typography variant="body1">
+                                            <b>Correo del ofertante: </b><br/>{correo?correo:"correo@gmail.com"}
+                                        </Typography>
+                                        <br/><br/>
+                                        <Button variant="contained" color="secondary">
+                                            Ver Perfil de Ofertante
+                                        </Button>
+                                        <br/>
+                                        <Button variant="contained" color="primary">
+                                            Agendar Visita
+                                        </Button>
+                                        <br/>
+                                        <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" style={ {borderColor: "#f44336", color:"#f44336"}} >
+                                            Agregar a Favoritos
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </Grid>
                         </Grid>
@@ -328,9 +351,9 @@ export default function verInmueble(){
                                                 <b>{service.serviceType}</b>
                                                 <ul>
                                                     <Typography variant="body2">
-                                                        {service.services.map((elem, index)=>{
+                                                        {service.services.map((elem, index2)=>{
                                                             return(
-                                                                <li key={index}>
+                                                                <li key={index+"-"+index2}>
                                                                     {elem}
                                                                 </li>
                                                             );
