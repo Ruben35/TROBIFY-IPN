@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -55,11 +56,11 @@ export default function SmallCard({deleteFav, idFav}){
     useEffect(async ()=>{
       if(idFav){
         const res = await axios.get(process.env.SERVER_URL+"/inmueble/unitario/"+idFav);
-        setTitle(res.data[0].titulo);
-        setDescription(res.data[0].descripcion);
+        setTitle(res.data.data.titulo);
+        setDescription(res.data.data.descripcion);
         var imgURL="";
         try{
-          imgURL=process.env.SERVER_URL+"/"+res.data[0].imgs[0].path.replace("\\","/");
+          imgURL=process.env.SERVER_URL+"/"+res.data.data.imgs[0].path.replace("\\","/");
         }catch(er){
           imgURL="/img/landing/carrusel0.jpg";
         }
@@ -110,7 +111,9 @@ export default function SmallCard({deleteFav, idFav}){
                           <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" color="primary" onClick={()=>{setOpenDialog(true);}} >Eliminar de Favoritos</Button>
                           }   
                           <Box display="flex" flexGrow={1} justifyContent="flex-end">
+                            <Link href={`/inmuebles/${idFav}`}>
                               <Button color="primary" variant="text">Ver más...</Button>
+                            </Link>
                           </Box>
                       </Box>
               </div>

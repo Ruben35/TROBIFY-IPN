@@ -1,12 +1,22 @@
 import Head from 'next/head'
+import React from 'react'
+import Link from 'next/link'
 import { Box, Container, Grid, Paper, Typography, GridList, GridListTile, GridListTileBar, Divider, Button } from '@material-ui/core'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import ImageZoom from 'react-medium-image-zoom'
-import useMediaQuery from '../../utils/CustomHooks';
 import ScrollDialog from '../../components/basic/ScrollDialog';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import WatchLaterRoundedIcon from '@material-ui/icons/WatchLaterRounded';
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close';
+import useFavourite from '../../utils/favouriteHooks';
+import useUser from '../../utils/UserHook';
+import useMediaQuery from '../../utils/CustomHooks';
+import Snackbar from '@material-ui/core/Snackbar';
 import axios from 'axios';
 
 //*STYLES
@@ -52,40 +62,64 @@ const lorem = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean 
 
 const tileDataExample =[
     {
-        title:"img1",
-        img:"/img/landing/carrusel0.jpg"
+        path:"/img/landing/carrusel0.jpg"
     },
     {
-        title:"img2",
-        img:"/img/landing/carrusel1.jpg"
+        path:"/img/landing/carrusel1.jpg"
     },
     {
-        title:"img3",
-        img:"/img/landing/carrusel2.jpg"
+        path:"/img/landing/carrusel2.jpg"
+    },
+]
+
+const servicesExample=[
+    {
+        serviceType: "Ferretería",
+        services: [
+            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit",
+            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit",
+        ]
     },
 ]
 
 //* PAGE
 export default function verInmueble( { inmuebleData, servicesData } ){
     const router = useRouter();
-    const { idInmueble } = router.query;
     const classes = useStyles();
-
+    const { idInmueble } = router.query;
+    const { addFavourite, trashFavourite, isMyFavourite } = useFavourite();
+    const { isLogged, userType } = useUser();
     const isSmall = useMediaQuery("(max-width: 769px)");
-
-    //States
-    const [propietaryName, setPropietaryName] = useState("");
-    const [correo, setCorreo] = useState("");
-    const tileData=tileDataExample;
-
-    const direccion = `${inmuebleData.calle} No. ${inmuebleData.numExt} ${inmuebleData.numInt?"No. Int"+inmuebleData.numInt:""}, ${inmuebleData.colonia}, ${inmuebleData.cp} ${inmuebleData.ciudad}, ${inmuebleData.estado}`;
-
-    const services=servicesData?formatServices():[];
-    console.log(servicesData);
-
+    
+    //Initial States
+    const [tileData, setTileData] = useState(tileDataExample);
+    const [direccion, setDireccion] = useState(); 
+    const [services, setServices]= useState(servicesExample);
+    
     //AuxStates
     const [actualTile, setActualTile] = useState(tileData[0]);
     const [openServices, setOpenServices] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [messageSnack, setMessageSnack] = useState("");
+    const [openSnack, setOpenSnack] = useState(false);
+
+    useEffect(()=>{
+        //Services and Directions formated
+        setDireccion(`${inmuebleData.calle} No. ${inmuebleData.numExt} ${inmuebleData.numInt?"No. Int"+inmuebleData.numInt:""}, ${inmuebleData.colonia}, ${inmuebleData.cp} ${inmuebleData.ciudad}, ${inmuebleData.estado}`);
+        setServices(servicesData.length!==0 ?formatServices():[]);
+        //Tiles formated
+        const tempTileData=inmuebleData.imgs.length!=0?formatImgs():tileDataExample;
+        setTileData(tempTileData);
+        setActualTile(tempTileData[0]);
+    },[])
+
+    useEffect(async ()=>{
+        //check if is favorite
+        if(isLogged && userType==="cliente"){
+          const fav = await isMyFavourite(idInmueble);
+          setIsFavorite(fav);
+        }
+      },[])
 
     //Functions
     function formatServices(){
@@ -109,6 +143,39 @@ export default function verInmueble( { inmuebleData, servicesData } ){
         return newServices;
     }
 
+    function formatImgs(){
+        const array = inmuebleData.imgs;
+        var count=0;
+        for(let elem of array){
+            elem.path=process.env.SERVER_URL+"\\"+elem.path;
+            count++;
+        }
+        console.log(count);
+        console.log(array);
+        return array;
+    }
+
+    const handleFavorite= ()=>{
+        console.log(isLogged)
+        if(!isLogged){
+            setMessageSnack("session");
+            setOpenSnack(true);
+        }
+        else if(userType!="cliente"){
+            setMessageSnack("type")
+            setOpenSnack(true);
+        }
+        else{
+          if(isFavorite){
+            if(trashFavourite(idInmueble))
+              setIsFavorite(!isFavorite);
+          }else{
+            if(addFavourite(idInmueble))
+              setIsFavorite(!isFavorite);
+          }
+        }
+      }
+
     return (
         <>
             <Head>
@@ -126,13 +193,11 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                 <Box width="100%" height="auto">
                                     <ImageZoom 
                                       image={{
-                                          src: actualTile.img,
-                                          alt: actualTile.title,
+                                          src: actualTile.path,
                                           className: classes.imgPort
                                       }}
                                       zoomImage={{
-                                          src: actualTile.img,
-                                          alt: actualTile.title,
+                                          src: actualTile.path,
                                           className: classes.zoomImage
                                       }}
                                       zoomMargin={isSmall?40:100}
@@ -142,7 +207,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                         <GridList className={classes.gridList} cols={2.5}>
                                             {tileData.map((tile, index) => (
                                             <GridListTile key={tile.title} className={classes.gridListImg} onClick={()=>setActualTile(tileData[index])}>
-                                                <img src={tile.img} alt={tile.title} />
+                                                <img src={tile.path} alt={index} />
                                             </GridListTile>
                                             ))}
                                         </GridList>
@@ -253,9 +318,18 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                     ""
                                     }
                                     </Typography>
-                                    <Box display="flex" justifyContent="center">
-                                        <Button variant="contained" color="primary" onClick={() => setOpenServices(true)} >Ver todos...</Button>
-                                    </Box>
+                                    {
+                                        services.length===0?
+                                        <Box display="flex" justifyContent="center" margin={4}>
+                                            <Typography variant="h5" color="textSecondary">
+                                                <b>No hay servicios en la zona </b>
+                                            </Typography>
+                                        </Box>
+                                        :
+                                        <Box display="flex" justifyContent="center">
+                                            <Button variant="contained" color="primary" onClick={() => setOpenServices(true)} >Ver todos...</Button>
+                                        </Box>
+                                    }
                                 </Box>
                             </Grid>                       
                             <Grid item xs>
@@ -268,20 +342,27 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                         </Typography>
                                         <br/>
                                         <Typography variant="body1">
-                                            <b>Correo del ofertante: </b><br/>{correo?correo:"correo@gmail.com"}
+                                            <b>Correo del ofertante: </b><br/>{inmuebleData.correo?inmuebleData.correo:"correo@gmail.com"}
                                         </Typography>
                                         <br/><br/>
-                                        <Button variant="contained" color="secondary">
+                                        <Button startIcon={<AccountBoxIcon/>} variant="contained" color="secondary">
                                             Ver Perfil de Ofertante
                                         </Button>
                                         <br/>
-                                        <Button variant="contained" color="primary">
+                                        <Button startIcon={<WatchLaterRoundedIcon/>} variant="contained" color="primary">
                                             Agendar Visita
                                         </Button>
                                         <br/>
-                                        <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" style={ {borderColor: "#f44336", color:"#f44336"}} >
-                                            Agregar a Favoritos
-                                        </Button>
+                                        {
+                                            isFavorite?
+                                            <Button startIcon={<FavoriteIcon/>} onClick={handleFavorite} variant="outlined" style={ {borderColor: "#f44336", color:"#f44336"}} >
+                                                Eliminar de Favoritos
+                                            </Button>
+                                            :
+                                            <Button startIcon={<FavoriteBorderIcon/>} onClick={handleFavorite} variant="outlined" style={ {borderColor: "#f44336", color:"#f44336"}} >
+                                                Agregar a Favoritos
+                                            </Button>
+                                        }
                                     </Box>
                                 </Box>
                             </Grid>
@@ -320,6 +401,30 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                             })
                         }   
             />
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              open={openSnack}
+              autoHideDuration={3000}
+              onClose={()=>setOpenSnack(false)}
+              message={messageSnack==="session"?"Inicia sesión para agregar a favoritos":"Solo clientes tienen favoritos"}
+              action={
+                <React.Fragment>
+                  {messageSnack==="session"?
+                  <Link href="/signin">
+                    <Button color="secondary" size="small" onClick={()=>setOpenSnack(false)}>
+                      SIGN IN
+                    </Button>
+                  </Link>:""
+                  }
+                  <IconButton size="small" aria-label="close" color="inherit" onClick={()=>setOpenSnack(false)}>
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </React.Fragment>
+              }
+            />
         </>
     );
 }
@@ -338,8 +443,7 @@ export async function getServerSideProps(context) {
         if(resServicios!=[]){
             servicesData=resServicios.data.servicios;
         }
-        console.log( inmuebleData );
-        console.log( servicesData );
+
         return {
             props: { inmuebleData, servicesData}
         }

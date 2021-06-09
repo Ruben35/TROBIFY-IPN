@@ -13,6 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 import axios from 'axios';
 import useUser from '../../utils/UserHook';
 import useFavourite from '../../utils/favouriteHooks';
+import { Link } from '@material-ui/core';
+import { useRouter } from 'next/router';
 
 
 const useStyles = makeStyles({
@@ -21,6 +23,9 @@ const useStyles = makeStyles({
   },
   button: {
       flexGrow: 1,
+  },
+  noDecoration :{
+    textDecoration: 'none'
   }
 });
 
@@ -29,6 +34,7 @@ export default function ItemCard({title, description, imgURL, idInmueble, openSn
   const { addFavourite, trashFavourite, isMyFavourite } = useFavourite();
   const { isLogged, userType } = useUser();
   const [isFavorite, setIsFavorite] = useState(false);
+  const router = useRouter();
 
 
 
@@ -60,35 +66,37 @@ export default function ItemCard({title, description, imgURL, idInmueble, openSn
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          alt="Titulo de Inmueble"
-          height="140"
-          image={img}
-          title="Titulo de Inmueble"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {title?title:"Titulo de Inmueble"}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {description?
-              (description.length>200)?description.substring(0,197)+"..."
-                :description
-              :"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero eros."}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+        <CardActionArea onClick={()=> router.push(`/inmuebles/${idInmueble}`)}>
+          <CardMedia
+            component="img"
+            alt="Titulo de Inmueble"
+            height="140"
+            image={img}
+            title="Titulo de Inmueble"
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {title?title:"Titulo de Inmueble"}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {description?
+                (description.length>200)?description.substring(0,197)+"..."
+                  :description
+                :"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero eros."}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
       <CardActions>
          <div className={classes.button}>
             <IconButton color="secondary" label="Favoritos" onClick={handleFavorite} >
                 {isFavorite?<FavoriteIcon/>:<FavoriteBorderIcon/>}
             </IconButton>
         </div>
-        <Button size="large" color="secondary" variant="outlined">
-          Ver Más...
-        </Button>
+        <Link href={`/inmuebles/${idInmueble}`}>
+          <Button size="large" color="secondary" variant="outlined">
+            Ver Más...
+          </Button>
+        </Link>
       </CardActions>
     </Card>
   );

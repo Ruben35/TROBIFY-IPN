@@ -1,10 +1,6 @@
 import Head from 'next/head'
 import { Box, Button, Container, Grid, Link, ThemeProvider, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useState } from 'react';
-import { spacing } from '@material-ui/system';
-import PaginationBar from '../../components/basic/PaginationBar';
-
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -12,7 +8,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import IconButton from '@material-ui/core/IconButton';
-import { red } from '@material-ui/core/colors';
+import { useRouter } from 'next/router';
 import cookies from 'next-cookies';
 import axios from 'axios';
 
@@ -34,9 +30,10 @@ export default function gestion( { dataInmuebles } ) {
     const CardGestion = ({ title, description, idInmueble , imgURL}) => {
 
         const img= (imgURL!="" && imgURL!=undefined)?process.env.SERVER_URL+"\\"+imgURL:"/img/landing/carrusel0.jpg";
+        const router = useRouter();
 
         return (<Card className={classes.root}>
-            <CardActionArea>
+            <CardActionArea onClick={()=> router.push(`/inmuebles/${idInmueble}`)}>
                 <CardMedia
                     component="img"
                     alt="Titulo de Inmueble"
@@ -56,9 +53,11 @@ export default function gestion( { dataInmuebles } ) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="large" color="primary" variant="outlined">
-                    Ver
-                </Button>
+                <Link href={`/inmuebles/${idInmueble}`}>
+                    <Button size="large" color="primary" variant="outlined">
+                        Ver
+                    </Button>
+                </Link>
                 <Button size="large" color="secondary" variant="outlined">
                     Editar
                 </Button>
