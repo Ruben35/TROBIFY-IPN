@@ -147,15 +147,56 @@ const inmueblesAgencia = async (req, res = response) => {
 const inmuebleUnitario = async (req, res = response) => {
 
     const inmueble_id = req.params.inmueble_id;
-    const obj_inmueble = await conn.query('SELECT i.titulo , i.descripcion , i.caracteristicas ,i.precio , i.status , i.superficie , i.nGarage , i.nRecamaras , i.nBanios , i.propietario , i.idinmueble ,  t.transaccion ,d.calle , d.numExt, d.numInt,z.colonia, z.ciudad, z.estado , z.cp FROM inmueble i, tipo_transaccion t, direcciones d,  zonas z WHERE t.idtipo_transaccion = i.tipo_transaccion_idtipo_transaccion and d.iddireccion  =  i.direcciones_iddireccion and  z.cp = d.zonas_cp and i.idinmueble = ?',[inmueble_id]);
-    //console.log(obj_inmueble);
+    let correo;
+
+    const obj_inmueble = await conn.query('SELECT i.titulo , i.descripcion , i.caracteristicas ,i.precio , i.status , i.superficie , i.nGarage , i.nRecamaras , i.nBanios , i.propietario , i.idinmueble ,  t.transaccion ,d.calle , d.numExt, d.numInt,z.colonia, z.ciudad, z.estado , z.cp FROM inmueble i, tipo_transaccion t, direcciones d,  zonas z WHERE t.idtipo_transaccion = i.tipo_transaccion_idtipo_transaccion and d.iddireccion = i.direcciones_iddireccion and  z.cp = d.zonas_cp and i.idinmueble = ?',[inmueble_id]);
+   
+   if(Object.keys(obj_inmueble).length != 0){
+
     const imgs = await conn.query('select im.path from imagenes im ,imagenes_inmueble imin where imin.inmueble_idinmueble =? AND im.idimagen = imin.imagenes_idimagen',[inmueble_id ]);
     
     obj_inmueble[0]['imgs'] = imgs;
+    obj_inmueble[0]['correo'] = correo;
+
+    const cor = await conn.query('select cliente_correo from oferta_cliente where inmueble_idinmueble = ?',[inmueble_id]);
+    const cor2 = await conn.query('select agencia_correo from oferta_agencias where inmueble_idinmueble = ?',[inmueble_id]);
+
+    if(Object.keys(cor).length != 0){
+        correo = cor[0].cliente_correo;
+    }
+
+    else{
+
+        if(Object.keys(cor2).length != 0){
+
+            correo = cor2[0].agencia_correo;
+        }
+
+    }
+
+    return res.json({
+        ok:true,
+        data:obj_inmueble[0]
+
+    })
+
+}
+
+else{
+    return res.json({
+        ok:false,
+        msg:'no se encontro el inmueble correspondiente'
+    })
+}
+
+}
+
+    
+ 
    
 
-    return res.status(200).send(obj_inmueble);
-}
+    
+
 
 // BUSQUEDA
 /*
