@@ -156,7 +156,7 @@ const inmuebleUnitario = async (req, res = response) => {
     const imgs = await conn.query('select im.path from imagenes im ,imagenes_inmueble imin where imin.inmueble_idinmueble =? AND im.idimagen = imin.imagenes_idimagen',[inmueble_id ]);
     
     obj_inmueble[0]['imgs'] = imgs;
-    obj_inmueble[0]['correo'] = correo;
+    
 
     const cor = await conn.query('select cliente_correo from oferta_cliente where inmueble_idinmueble = ?',[inmueble_id]);
     const cor2 = await conn.query('select agencia_correo from oferta_agencias where inmueble_idinmueble = ?',[inmueble_id]);
@@ -173,6 +173,8 @@ const inmuebleUnitario = async (req, res = response) => {
         }
 
     }
+
+    obj_inmueble[0]['correo'] = correo;
 
     return res.json({
         ok:true,
