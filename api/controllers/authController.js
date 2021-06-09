@@ -179,11 +179,39 @@ const verificar = (req,resp) =>{
         nombre
     })
 
+
+}
+
+const getInfoUsuario = async(req,res = response) =>{
+
+    const correo = req.params.usuario;
+
+    console.log(correo);
+    const usr = await conn.query('select c.nombre, c.apPaterno, c.apMaterno ,t.telefono, i.path from cliente c, telefonos_cliente t , imagenes i  where c.correo =? and t.cliente_correo = c.correo and c.imagenes_idimagen = i.idimagen',[correo]);
+    
+    if(usr != null){
+
+        return res.json({
+            ok:true,
+            info:usr[0]
+        })
+    }
+
+    else{
+
+        const admin = await conn.query('select a.nombre , a.descripcion, a.rfc, t.telefono from agencia a , telefonos_agencia t where correo =? and a.correo = t.agencia_correo',[correo]);
+        return res.json({
+            ok:true,
+            info:admin[0]
+        })
+    }
+
 }
 
 
 module.exports = {
     login,
     registrar,
-    verificar
+    verificar,
+    getInfoUsuario
 }

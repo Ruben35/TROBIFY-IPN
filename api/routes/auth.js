@@ -1,8 +1,8 @@
 const express = require('express');
 const { check } = require('express-validator');
-const { login, registrar, verificar } = require('../controllers/authController');
+const { login, registrar, verificar, getInfoUsuario } = require('../controllers/authController');
 const { validarCampos } = require('../middlewares/validarCampos');
-const {validarJWTParams} = require('../middlewares/validar-jwt');
+const {validarJWTParams, validarJWT} = require('../middlewares/validar-jwt');
 
 const router = express.Router();
 const multer = require('multer');
@@ -27,7 +27,7 @@ const upload = multer({
 
 
 router.post('/registro',[upload],registrar);
-
+router.get('/info/:usuario',getInfoUsuario);
 router.get('/confirmar/:token',validarJWTParams,verificar);
 
 
