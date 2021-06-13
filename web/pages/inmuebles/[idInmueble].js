@@ -105,7 +105,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
 
     useEffect(()=>{
         //Services and Directions formated
-        setDireccion(`${inmuebleData.calle} No. ${inmuebleData.numExt} ${inmuebleData.numInt?"No. Int"+inmuebleData.numInt:""}, ${inmuebleData.colonia}, ${inmuebleData.cp} ${inmuebleData.ciudad}, ${inmuebleData.estado}`);
+        setDireccion(`${inmuebleData.calle} No. ${inmuebleData.numExt} ${inmuebleData.numInt?"No. Int "+inmuebleData.numInt:""}, ${inmuebleData.colonia}, ${inmuebleData.cp} ${inmuebleData.ciudad}, ${inmuebleData.estado}`);
         setServices(servicesData.length!==0 ?formatServices():[]);
         //Tiles formated
         const tempTileData=inmuebleData.imgs.length!=0?formatImgs():tileDataExample;
