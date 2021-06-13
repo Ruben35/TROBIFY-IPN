@@ -114,7 +114,7 @@ const FormNuevoInmueble = ()=>{
     let isTabletOrBigger= useMediaQuery("(min-width: 426px)");
 
 
-    const registerInmueble = () => {
+    const registerInmueble = async () => {
         var bodyFormData = new FormData();
         bodyFormData.append('correo',userEmail);
         bodyFormData.append('titulo',title);
@@ -127,8 +127,14 @@ const FormNuevoInmueble = ()=>{
         bodyFormData.append('noRecamaras',nRooms);
         bodyFormData.append('noBanios',nBathrooms);
         var propietary=""
-        if(isPropietary==="Si")
-            propietary=userName;
+        if(isPropietary==="Si"){
+            if(userType==="cliente"){
+            const dataUser= await axios.get(process.env.SERVER_URL+"/auth/info/"+userEmail).catch(()=>{return propietaryName});
+            propietary=`${dataUser.data.info.nombre} ${dataUser.data.info.apPaterno} ${dataUser.data.info.apMaterno}`;
+            }else{
+                propietary=userName;
+            }
+        }
         else
             propietary=propietaryName;
         bodyFormData.append('propietario',propietary);
@@ -139,7 +145,10 @@ const FormNuevoInmueble = ()=>{
         bodyFormData.append('cp',cp);
         bodyFormData.append('calle',calle);
         bodyFormData.append('noExterior',numExt);
-        bodyFormData.append('noInterior',numInt);
+        if(numInt!=="")
+            bodyFormData.append('noInterior',numInt);
+        else
+            bodyFormData.append('noInterior',0);
         bodyFormData.append('colonia',colonia);
         bodyFormData.append('ciudad',ciudad);
         bodyFormData.append('estado',estado);

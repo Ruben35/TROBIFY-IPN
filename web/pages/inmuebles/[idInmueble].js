@@ -105,7 +105,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
 
     useEffect(()=>{
         //Services and Directions formated
-        setDireccion(`${inmuebleData.calle} No. ${inmuebleData.numExt} ${inmuebleData.numInt?"No. Int "+inmuebleData.numInt:""}, ${inmuebleData.colonia}, ${inmuebleData.cp} ${inmuebleData.ciudad}, ${inmuebleData.estado}`);
+        setDireccion(`${inmuebleData.calle} No. ${inmuebleData.numExt} ${inmuebleData.numInt!==0?"No. Int "+inmuebleData.numInt:""}, ${inmuebleData.colonia}, ${inmuebleData.cp} ${inmuebleData.ciudad}, ${inmuebleData.estado}`);
         setServices(servicesData.length!==0 ?formatServices():[]);
         //Tiles formated
         const tempTileData=inmuebleData.imgs.length!=0?formatImgs():tileDataExample;
@@ -236,7 +236,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                         <Typography variant={'h5'}><b>Descripción</b></Typography>
                                         <Divider/>
                                         <Typography variant="body1">
-                                            <Box marginTop={1}>
+                                            <Box marginTop={1} whiteSpace="pre-line">
                                             {inmuebleData.descripcion?inmuebleData.descripcion:lorem}
                                             </Box>
                                         </Typography>
@@ -261,7 +261,9 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                                     </Grid>
                                                 </Grid>
                                             </Box>
-                                            {inmuebleData.caracteristicas?inmuebleData.caracteristicas:lorem}
+                                            <Box whiteSpace="pre-line">
+                                                {inmuebleData.caracteristicas?inmuebleData.caracteristicas:lorem}
+                                            </Box>
                                         </Typography>
                                     </Box>
                                 </Box>
