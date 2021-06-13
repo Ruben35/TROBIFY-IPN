@@ -588,6 +588,40 @@ const getServicios = async(req,resp = response) =>{
 }
 
 
+const verPapelera = async(req,resp=response) =>{
+    const correo = req.params.correo;
+    const data  = await conn.query('select i.titulo,i.descripcion from papelera_favoritos p ,inmueble i where p.inmueble_idinmueble = i.idinmueble and p.cliente_correo = ?',[correo]);
+    
+    return resp.json({
+        ok:true,
+        papelera:data
+    })
+
+}
+
+const eliminarDePapelera = async(req,resp = response) =>{
+
+    const {idinmueble} = req.body;
+
+    try {
+
+        await conn.query('DELETE FROM papelera_favoritos where inmueble_idinmueble =?',[idinmueble]);
+        return resp.json({
+            ok:true,
+            msg: 'Eliminado de papelera'
+        })
+        
+    } catch (error) {
+
+        return resp.json({
+            ok:false,
+            msg: 'ocurrio un error'
+        })
+        
+    }
+
+}
+
 module.exports = {
 
     getAllInmuebles,
@@ -602,7 +636,9 @@ module.exports = {
     registroInmuebleAgencia,
     registrarServicioZona,
     verServiciosZona,
-    getServicios
+    getServicios,
+    verPapelera,
+    eliminarDePapelera
     
 
     
