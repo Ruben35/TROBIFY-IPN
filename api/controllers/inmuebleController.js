@@ -573,10 +573,17 @@ const verServiciosZona = async(req,resp) =>{
         
     }
 
+}
 
-  
+const getServicios = async(req,resp = response) =>{
+
+    const servicios = [];
+    const data = await conn.query('select servicio from tipo_servicios');
+    for(i of data){
+        servicios.push(i.servicio);
+    }
     
-  
+    return resp.status(200).json({servicios});
 
 }
 
@@ -594,7 +601,8 @@ module.exports = {
     registroInmuebleCliente,
     registroInmuebleAgencia,
     registrarServicioZona,
-    verServiciosZona
+    verServiciosZona,
+    getServicios
     
 
     
