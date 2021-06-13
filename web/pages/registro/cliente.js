@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
     large: {
       width: theme.spacing(30),
       height: theme.spacing(30),
+      boxShadow: "4px 7px 13px rgba(0, 0, 0, 0.24)"
     },
   }));
 

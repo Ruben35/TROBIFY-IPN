@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SmallCard({deleteFav, idFav}){
     const classes = useStyles();
     const router = useRouter();
-    const {trashFavourite} = useFavourite();
+    const {trashFavourite, deleteFromTrash} = useFavourite();
 
     //States
     const [title, setTitle] = useState(null);
@@ -73,12 +73,11 @@ export default function SmallCard({deleteFav, idFav}){
     }
 
     const handleYesDialog = async() =>{
-      if(deleteFav){
-
-      }else{
+      if(deleteFav)
+        await deleteFromTrash(idFav);
+      else
         await trashFavourite(idFav);
-        router.replace(router.asPath);
-      }
+      router.replace(router.asPath);
 
       setOpenDialog(false);
     }
@@ -106,9 +105,9 @@ export default function SmallCard({deleteFav, idFav}){
                   </CardContent>
                       <Box display="flex"  padding={2} width="100%">
                           {deleteFav?
-                          <Button startIcon={<DeleteIcon/>} variant="outlined" color="primary">Eliminar Completamente</Button>
+                          <Button startIcon={<DeleteIcon/>} variant="outlined" color="primary" onClick={()=>{setOpenDialog(true)}} >Eliminar Completamente</Button>
                           :
-                          <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" color="primary" onClick={()=>{setOpenDialog(true);}} >Eliminar de Favoritos</Button>
+                          <Button startIcon={<FavoriteBorderIcon/>} variant="outlined" color="primary" onClick={()=>{setOpenDialog(true)}}  >Eliminar de Favoritos</Button>
                           }   
                           <Box display="flex" flexGrow={1} justifyContent="flex-end">
                             <Link href={`/inmuebles/${idFav}`}>
@@ -119,8 +118,8 @@ export default function SmallCard({deleteFav, idFav}){
               </div>
               </Card>
               <YesNoDialog
-                title={`Eliminar de favoritos...`}
-                description={`Seguro que quieres enviar a papelera al inmueble "${title}"`}
+                title={!deleteFav?"Eliminar de favoritos...":"Eliminar Completamente..."}
+                description={!deleteFav?`¿Seguro que quieres enviar a papelera al inmueble "${title}"?`:`¿Seguro que quieres eliminar completamente al inmueble "${title}" de la papelera?`}
                 openDialog={openDialog}
                 handleYes={handleYesDialog}
                 handleNo={handleNoDialog}

@@ -31,6 +31,7 @@ export default function useFavourite(){
                 },
                 headers: { "token": jwt }
               })
+            deleteFromTrash(id);
             return true;
         }catch(er){
             return false;
@@ -53,9 +54,25 @@ export default function useFavourite(){
         }
     })
 
+    const deleteFromTrash = useCallback( async (id) =>{
+        try{
+            axios({
+                method: "post",
+                url:  process.env.SERVER_URL+"/inmueble/eliminarDePapelera",
+                data: {
+                    idinmueble:id
+                }
+            })
+            return true;
+        }catch(er){
+            return false;
+        }
+    })
+
     return{
         addFavourite,
         trashFavourite,
+        deleteFromTrash,
         isMyFavourite
     }
 

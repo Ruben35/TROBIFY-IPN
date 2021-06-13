@@ -50,5 +50,5 @@ router.get('/mostrarServicios/:cp',verServiciosZona);
 router.get('/servicios',getServicios);
 
 router.get('/verPapalera/:correo',verPapelera);
-router.post('/elimarDePapelera',eliminarDePapelera);
+router.post('/eliminarDePapelera',eliminarDePapelera);
 module.exports = router
