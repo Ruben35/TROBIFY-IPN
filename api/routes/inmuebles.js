@@ -2,7 +2,7 @@ const express = require('express');
 const { getAllInmuebles, inmueblesCliente, inmueblesAgencia,
  inmuebleUnitario, getInmuebles, getFavoritos,agregarFavorito, 
  eliminarFavorito,registroInmuebleCliente, registroInmuebleAgencia, 
- registrarServicioZona, verServiciosZona, getServicios} = require('../controllers/inmuebleController');
+ registrarServicioZona, verServiciosZona, getServicios, verPapelera, eliminarDePapelera} = require('../controllers/inmuebleController');
 const { agendarVisita, historialVisitas } = require('../controllers/visitaController');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const router = express.Router();
@@ -49,5 +49,6 @@ router.post('/registrarServicio',registrarServicioZona);
 router.get('/mostrarServicios/:cp',verServiciosZona);
 router.get('/servicios',getServicios);
 
-
+router.get('/verPapalera/:correo',verPapelera);
+router.post('/elimarDePapelera',eliminarDePapelera);
 module.exports = router
