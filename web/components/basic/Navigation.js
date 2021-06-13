@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const Navigation = () =>{
     const classes = useStyles();
     const router = useRouter();
-    const {isLogged, logout, userType} = useUser();
+    const {isLogged, logout, userType, userEmail} = useUser();
 
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -103,7 +103,9 @@ const Navigation = () =>{
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
+        <Link href={`/perfil/${userEmail}`}>
         <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
+        </Link>
         <Link href="/inmuebles/gestionInmueble">
         <MenuItem onClick={handleMenuClose}>Gestionar Inmuebles</MenuItem>
         </Link>

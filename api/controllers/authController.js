@@ -200,10 +200,18 @@ const getInfoUsuario = async(req,res = response) =>{
     else{
 
         const admin = await conn.query('select a.nombre , a.descripcion, a.rfc, i.path from agencia a, imagenes i where correo =? and a.imagenes_idimagen = i.idimagen',[correo]);
-        return res.json({
-            ok:true,
-            info:admin[0]
-        })
+
+        if(admin.length!==0){
+            return res.json({
+                ok:true,
+                info:admin[0]
+            })
+        }else{
+            return res.json({
+                ok:false
+            })
+        }
+
     }
 
 }

@@ -347,9 +347,11 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                             <b>Correo del ofertante: </b><br/>{inmuebleData.correo?inmuebleData.correo:"correo@gmail.com"}
                                         </Typography>
                                         <br/><br/>
-                                        <Button startIcon={<AccountBoxIcon/>} variant="contained" color="secondary">
-                                            Ver Perfil de Ofertante
-                                        </Button>
+                                        <Link href={`/perfil/${inmuebleData.correo}`}>
+                                            <Button startIcon={<AccountBoxIcon/>} variant="contained" color="secondary">
+                                                Ver Perfil de Ofertante
+                                            </Button>
+                                        </Link>
                                         <br/>
                                         <Button startIcon={<WatchLaterRoundedIcon/>} variant="contained" color="primary">
                                             Agendar Visita
