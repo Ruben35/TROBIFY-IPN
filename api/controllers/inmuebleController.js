@@ -614,7 +614,7 @@ const eliminarInmueble = async(req, res) => {
         await conn.query(delete_sugerencias, [inmueble_id]);
         await conn.query(delete_inmueble, [inmueble_id]);
 
-        //TODO: Eliminar imagenes
+        //TODO: Eliminar imagenes?
 
         console.log("Inmueble eliminado");
         return res.json({
@@ -637,13 +637,18 @@ const editarInmueble = async(req, res) => {
             * Descripción
             * Características
             * Imágenes?
-            * Precio?
+            * Precio
             * Propietario
             * tipo_transaccion
         */
-        const { inmueble_id, descripcion, caracteristicas, tipo_transaccion } = req.params.inmueble_id;
+        const { inmueble_id, descripcion, caracteristicas, tipo_transaccion, precio, propietario } = req.body;
+        const query = "SELECT idtipo_transaccion FROM tipo_transaccion WHERE transaccion = ?;";
+        const update = "UPDATE inmueble SET descripcion = ?, caracteristicas = ?, tipo_transaccion_idtipo_transaccion = ?, precio = ?, propietario = ? WHERE idinmueble = ?;";
 
-        //await conn.query(, );
+        const object = await conn.query(query, [tipo_transaccion]);
+        const idtipo_transaccion = object[0].idtipo_transaccion;
+
+        await conn.query(update, [descripcion, caracteristicas, idtipo_transaccion, precio, propietario, inmueble_id]);
 
         console.log("Inmueble editado");
         return res.json({
@@ -653,7 +658,7 @@ const editarInmueble = async(req, res) => {
         console.log(error);
         return res.status(500).json({
             ok: false,
-            msg: 'No se completo la petició'
+            msg: 'No se completo la petición'
         })
     }
 }
@@ -708,8 +713,9 @@ module.exports = {
     verServiciosZona,
     getServicios,
     verPapelera,
-    eliminarDePapelera
+    eliminarDePapelera,
+    eliminarInmueble,
+    editarInmueble
     
-
     
 }
