@@ -187,7 +187,7 @@ const getInfoUsuario = async(req,res = response) =>{
     const correo = req.params.usuario;
 
     console.log(correo);
-    const usr = await conn.query('select c.nombre, c.apPaterno, c.apMaterno ,t.telefono, i.path from cliente c, telefonos_cliente t , imagenes i  where c.correo =? and t.cliente_correo = c.correo and c.imagenes_idimagen = i.idimagen',[correo]);
+    const usr = await conn.query('select c.nombre, c.apPaterno, c.apMaterno, i.path from cliente c , imagenes i  where c.correo =?  and c.imagenes_idimagen = i.idimagen',[correo]);
     
     if(usr != null){
 
@@ -199,7 +199,7 @@ const getInfoUsuario = async(req,res = response) =>{
 
     else{
 
-        const admin = await conn.query('select a.nombre , a.descripcion, a.rfc, t.telefono from agencia a , telefonos_agencia t where correo =? and a.correo = t.agencia_correo',[correo]);
+        const admin = await conn.query('select a.nombre , a.descripcion, a.rfc from agencia a  where correo =? and a.correo = t.agencia_correo',[correo]);
         return res.json({
             ok:true,
             info:admin[0]
