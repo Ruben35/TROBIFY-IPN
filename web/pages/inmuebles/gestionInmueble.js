@@ -94,9 +94,9 @@ export default function gestion( { dataInmuebles } ) {
                         spacing={5}>
                      {/* ITEMS */}
                      {
-                      (dataInmuebles===undefined)?
+                      (dataInmuebles===undefined || dataInmuebles.length===0)?
                       <Box display="flex" alignItems="center" justifyContent="center" height="60vh">
-                        <Typography variant="h3" color="textSecondary">No hay datos</Typography>
+                        <Typography variant="h3" color="textSecondary">No tienes inmuebles</Typography>
                       </Box>
                       :
                       dataInmuebles.map((inmueble)=>{
