@@ -646,15 +646,21 @@ const editarInmueble = async(req, res) => {
             * Precio
             * Propietario
             * tipo_transaccion
+            * superficie
+            * nBanios
+            * nGarage
+            * nRecamaras
         */
-        const { inmueble_id, descripcion, caracteristicas, tipo_transaccion, precio, propietario } = req.body;
+        const { inmueble_id, descripcion, caracteristicas, tipo_transaccion, precio, propietario, superficie, nBanios, nGarage, nRecamaras } = req.body;
         const query = "SELECT idtipo_transaccion FROM tipo_transaccion WHERE transaccion = ?;";
-        const update = "UPDATE inmueble SET descripcion = ?, caracteristicas = ?, tipo_transaccion_idtipo_transaccion = ?, precio = ?, propietario = ? WHERE idinmueble = ?;";
+        const update = "UPDATE inmueble SET descripcion = ?, caracteristicas = ?, tipo_transaccion_idtipo_transaccion = ?, precio = ?, propietario = ?, "
+            + "superficie = ?, nBanios = ?, nGarage = ?, nRecamaras = ? "
+            + "WHERE idinmueble = ?;";
 
         const object = await conn.query(query, [tipo_transaccion]);
         const idtipo_transaccion = object[0].idtipo_transaccion;
 
-        await conn.query(update, [descripcion, caracteristicas, idtipo_transaccion, precio, propietario, inmueble_id]);
+        await conn.query(update, [descripcion, caracteristicas, idtipo_transaccion, precio, propietario, superficie, nBanios, nGarage, nRecamaras, inmueble_id]);
 
         console.log("Inmueble editado");
         return res.json({
