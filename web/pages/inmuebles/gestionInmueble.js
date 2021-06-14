@@ -92,9 +92,11 @@ export default function gestion( { dataInmuebles } ) {
                             Ver
                         </Button>
                     </Link>
-                    <Button size="large" color="secondary" variant="outlined">
-                        Editar
-                    </Button>
+                    <Link href={`/inmuebles/editar/${idInmueble}`}>
+                        <Button size="large" color="secondary" variant="outlined">
+                            Editar
+                        </Button>
+                    </Link>
                     <div className={classes.button}>
                         <IconButton className={classes.colorRed} onClick={()=> setOpenDialog(true)}>
                             <DeleteOutlinedIcon />
