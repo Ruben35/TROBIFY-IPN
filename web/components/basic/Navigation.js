@@ -121,6 +121,17 @@ const Navigation = () =>{
       </Menu>
     );  
 
+      const [searchInput, setSearchInput] = useState("");
+
+      const handleOnKeyDown = (e) =>{
+        if (e.key === 'Enter' && searchInput!=="") {
+          router.push({
+            pathname: '/search',
+            query: { titulo: searchInput },
+          })
+        }
+      }
+      
 
     return (
         <div>
@@ -142,6 +153,9 @@ const Navigation = () =>{
                               root: classes.inputRoot,
                               input: classes.inputInput,
                           }}
+                          value={searchInput}
+                          onKeyDown={handleOnKeyDown}
+                          onChange={(e)=>setSearchInput(e.target.value)}
                           inputProps={{ 'aria-label': 'search' }}
                           />
                       </div>

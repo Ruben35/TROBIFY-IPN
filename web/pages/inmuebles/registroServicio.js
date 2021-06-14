@@ -68,8 +68,8 @@ const FormServicio = ( { servicios } )=>{
     const [alertMessage, setAlertMessage] = useState("");
 
     useEffect(()=>{
-        setServiciosList(servicios.sort((a,b)=>{return a.servicio>b.servicio?1:-1}));
-    },[])
+        setServiciosList(servicios.sort((a,b)=>{return a.servicio>b.servicio?-1:1}));
+    },[serviciosList])
 
     const handleCP = (e) =>{
         if(e.target.value.length<=5){
@@ -211,10 +211,16 @@ export async function getServerSideProps(context) {
         res.end();
     }
 
-    let servicios;
+    let servicios=[];
     try{
         const res = await axios.get(process.env.SERVER_URL+"/inmueble/servicios");
-        servicios=res.data.servicios;
+        const data=res.data.listServs;
+        console.log(data);
+        for(let i=0; i<data.length;i++){
+            console.log(data[i].servicio);
+            servicios.push(data[i].servicio);
+        }
+        console.log(servicios);
     }catch{
         servicios=[];
     }

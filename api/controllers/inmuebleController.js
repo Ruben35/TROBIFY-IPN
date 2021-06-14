@@ -225,8 +225,8 @@ const getInmuebles = async (req, res = response) => {
     const page = parseInt(req.params.page);
 
     var query = "SELECT ";
-    const params = "inmueble.idinmueble, titulo, descripcion, precio, propietario, imagenes_idimagen";
-    const inner_join = " INNER JOIN imagenes_inmueble ON (inmueble.idinmueble = imagenes_inmueble.inmueble_idinmueble)";
+    const params = "inmueble.idinmueble, titulo, descripcion, precio, propietario, imagenes.path ";
+    const inner_join = " INNER JOIN imagenes_inmueble ON (inmueble.idinmueble = imagenes_inmueble.inmueble_idinmueble) INNER JOIN imagenes ON (imagenes.idimagen = imagenes_inmueble.imagenes_idimagen)";
 
     query = query.concat(params, " FROM inmueble", inner_join);
 
@@ -574,7 +574,7 @@ const verServiciosZona = async(req,resp) =>{
     }
 }
 
-const getServicios = async(req, resp) =>{
+const getServicios = async(req, res) =>{
     try {
         let listServs = await conn.query('SELECT servicio FROM tipo_servicios;');
 
@@ -676,6 +676,7 @@ const editarInmueble = async(req, res) => {
 }
 
 const verPapelera = async(req,resp=response) =>{
+    
     const correo = req.params.correo;
     const data  = await conn.query('select i.idinmueble from papelera_favoritos p ,inmueble i where p.inmueble_idinmueble = i.idinmueble and p.cliente_correo = ?',[correo]);
     return resp.json({

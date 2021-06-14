@@ -33,12 +33,12 @@ const agendarVisita = async(req, res) =>{
 const historialVisitas = async(req,res) =>{
 
     const {correo} = req.params;
-    console.log(correo);
+    //console.log(correo);
 
     //buscar el clientes
     const c = await conn.query('select * from cliente where correo =?',[correo]);
     const a = await conn.query('select * from agencia where correo =?',[correo]);
-    const respuesta = [];
+    let respuesta = [];
 
     
     //cliente
@@ -68,9 +68,14 @@ const historialVisitas = async(req,res) =>{
 
         for(i of im){
 
-            const res = await conn.query('select i.titulo,c.nombre,c.apPaterno,c.correo,v.fecha,v.status from inmueble i, oferta_agencia ofa, cliente c ,visitas v where i.idinmueble = ofa.inmueble_idinmueble and c.correo = v.cliente_correo and v.cliente_correo =?',[correo]);
-            respuesta.push(res[0]);
+            //console.log(i.inmueble_idinmueble);
 
+            let data = await conn.query('select v.status, v.fecha, v.cliente_correo as correo, i.titulo, c.nombre, c.apPaterno from visitas v inner join inmueble i on v.inmueble_idinmueble=i.idinmueble inner join cliente c on v.cliente_correo=c.correo  where v.inmueble_idinmueble = ? ',[i.inmueble_idinmueble]);
+            if(Object.keys(data).length != 0){
+                respuesta.push(data[0]);
+
+            }
+    
         }
 
         return res.json({
