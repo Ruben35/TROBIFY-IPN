@@ -595,16 +595,16 @@ const getServicios = async(req, resp) =>{
 const eliminarInmueble = async(req, res) => {
     console.log("Ejecutando eliminarInmueble...");
     try {
-        const { inmueble_id } = req.params.inmueble_id;
+        const  inmueble_id  = req.params.inmueble_id;
 
-        const delete_papelera = "DELETE FROM papalera_favoritos WHERE inmueble_idinmueble = ?;";
+        const delete_papelera = "DELETE FROM papelera_favoritos WHERE inmueble_idinmueble = ?;";
         const delete_favoritos = "DELETE FROM favoritos WHERE inmueble_idinmueble = ?;";
         const delete_visitas = "DELETE FROM visitas WHERE inmueble_idinmueble = ?;";
         const delete_ofertas_agencias = "DELETE FROM oferta_agencias WHERE inmueble_idinmueble = ?;";
         const delete_ofertas_cliente = "DELETE FROM oferta_cliente WHERE inmueble_idinmueble = ?;";
-        const delete_imagenes = "DELETE FROM idimagen WHERE idimagen IN (" +
-                "SELECT * FROM ( SELECT imagenes_idimagen WHERE inmueble_idinmueble = ? )" +
-                ") AS query );";
+        // const delete_imagenes = "DELETE FROM idimagen WHERE idimagen IN (" +
+        //         "SELECT * FROM ( SELECT imagenes_idimagen WHERE inmueble_idinmueble = ? )" +
+        //         ") AS query );";
         const delete_imagenes_inmueble = "DELETE FROM imagenes_inmueble WHERE inmueble_idinmueble = ?;";
         const delete_sugerencias = "DELETE FROM oferta_sugerencias WHERE inmueble_idinmueble = ?;";
         const delete_inmueble = "DELETE FROM inmueble WHERE idinmueble = ?;";
@@ -615,7 +615,7 @@ const eliminarInmueble = async(req, res) => {
         await conn.query(delete_visitas, [inmueble_id]);
         await conn.query(delete_ofertas_agencias, [inmueble_id]);
         await conn.query(delete_ofertas_cliente, [inmueble_id]);
-        await conn.query(delete_imagenes, [inmueble_id]);
+        // await conn.query(delete_imagenes, [inmueble_id]);
         await conn.query(delete_imagenes_inmueble, [inmueble_id]);
         await conn.query(delete_sugerencias, [inmueble_id]);
         await conn.query(delete_inmueble, [inmueble_id]);

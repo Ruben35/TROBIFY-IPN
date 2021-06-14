@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Box, Button, Container, Grid, Link, ThemeProvider, Typography } from '@material-ui/core';
+import { Box, Button, Container, Grid, Link, Snackbar, Typography } from '@material-ui/core';
 import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { useRouter } from 'next/router';
 import useMediaQuery from '../../utils/CustomHooks'
 import YesNoDialog from '../../components/basic/YesNoDialog';
+import Alert from '@material-ui/lab/Alert';
 import cookies from 'next-cookies';
 import axios from 'axios';
 
@@ -38,12 +39,30 @@ export default function gestion( { dataInmuebles } ) {
         const router = useRouter();
 
         const [openDialog, setOpenDialog] = useState(false);
+        const [open, setOpen] = useState(false);
+        const [alertMessage, setAlertMessage] = useState();
 
         const handleYesDialog = async () => {
 
+            try{
+                const res = await axios.post(process.env.SERVER_URL+"/inmueble/eliminar/"+idInmueble);
+
+                router.replace(router.asPath);
+            }catch(err){
+                console.log(err);
+                setAlertMessage("Error en el Servidor");
+                setOpen(true);
+            }
 
             setOpenDialog(false);
         }
+
+        const handleAlertClose = (event, reason) => {
+            if (reason === 'clickaway') {
+              return;
+            }
+            setOpen(false);
+          };
 
         return (
             <>
@@ -91,6 +110,11 @@ export default function gestion( { dataInmuebles } ) {
                 handleNo={() => setOpenDialog(false)}
                 yesText="Sí, seguro!"
             />
+            <Snackbar open={open} autoHideDuration={3000} anchorOrigin={{vertical:"bottom", horizontal:"right"}} onClose={handleAlertClose}>
+                <Alert severity="error" variant="filled" onClose={handleAlertClose}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
             </>
         );
     }
