@@ -9,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import { useRouter } from 'next/router';
+import useMediaQuery from '../../utils/CustomHooks'
 import cookies from 'next-cookies';
 import axios from 'axios';
 
@@ -27,6 +28,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function gestion( { dataInmuebles } ) {
     const classes = useStyles();
+    let isTabletOrSmaller= useMediaQuery("(max-width: 426px)");
+
     const CardGestion = ({ title, description, idInmueble , imgURL}) => {
 
         const img= (imgURL!="" && imgURL!=undefined)?process.env.SERVER_URL+"\\"+imgURL:"/img/landing/carrusel0.jpg";
@@ -76,13 +79,18 @@ export default function gestion( { dataInmuebles } ) {
             </Head>
             <Box minHeight="64px"></Box>
             <Container maxWidth="lg">
-                <Box display="flex" flexDirection="row" mt={2} mb={2}>
-                    <Box flexGrow={1}>
+                <Box display="flex" flexDirection={isTabletOrSmaller?"column":"row"}  alignItems="center" mt={2} mb={2}>
+                    <Box flexGrow={1} textAlign={isTabletOrSmaller?"center":""}>
                         <Typography variant="h4" color="secondary">Tus inmuebles</Typography>
                     </Box>
                     <Link href="/inmuebles/registrar">
-                        <Button variant="contained" size="large" color="secondary">Registrar Nuevo Inmueble</Button>
+                        <Button variant="contained" size="medium" color="secondary">Registrar Nuevo Inmueble</Button>
                     </Link>
+                    <Box marginLeft={!isTabletOrSmaller?3:0} marginTop={isTabletOrSmaller?3:0}>
+                        <Link href="/inmuebles/registroServicio">
+                            <Button variant="contained" size="medium" color="primary">Registrar Nuevo Servicio</Button>
+                        </Link>
+                    </Box>
                 </Box>
                 <Box mt={2}>
                     <Box display="flex" alignItems="center" justifyContent="flex-end" mb={2}>

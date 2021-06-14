@@ -86,10 +86,17 @@ export default function SignInSide() {
       }
       axios.post(process.env.SERVER_URL+'/auth/login', auth)
         .then(res=>{
-          login(res.data.nombre,res.data.correo,res.data.tipo,res.data.token);
-          router.push("/");
+          if(res.data!==""){
+            login(res.data.nombre,res.data.correo,res.data.tipo,res.data.token);
+            router.push("/");
+          }else{
+            setAlertMessage("Correo y/o contraseña invalidos");
+            setOpen(true);
+            setErrorSubmit(true);
+          }
         })
         .catch(error=>{
+          console.log(error);
           if(error.response){
             if(!error.response.data.ok){
               if(error.response.data.errors){

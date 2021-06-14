@@ -98,7 +98,7 @@ export default function Inmuebles({ dataInmuebles }){
             </SwipeableDrawer>
             <Box minHeight="64px"></Box>
             <Container maxWidth="lg">
-                <Box display="flex" flexDirection="row" mt={2} mb={2}>
+                <Box display="flex" flexDirection="row" mt={2} mb={2} textAlign="center">
                     <Typography variant="h4" color="secondary">Inmuebles cerca de ti</Typography>
                 </Box>
                 <Box mt={2}>

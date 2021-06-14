@@ -302,7 +302,6 @@ const FormNuevoInmueble = ()=>{
                 />
             </div>
             <div className={(isTabletOrBigger && isPropietary==="No")?classes.divPropietario:""}> 
-                {/* FALTA AGREGAR ESTILOS PARA PONER DE LADO EL PROPIETARIO (GRID) */}
                 <Box display="flex"
                     flexDirection="column"
                     justifyContent= "center"
@@ -355,6 +354,7 @@ const FormNuevoInmueble = ()=>{
                         value={tipoTransaccion}
                         onChange={(e)=>{setTipoTransaccion(e.target.value)}}
                         className={classes.selectBigger}
+                        label="Tipo de Transacción"
                         >
                         <MenuItem value={1}>Venta de Inmueble</MenuItem>
                         <MenuItem value={2}>Alquiler de Inmueble</MenuItem>

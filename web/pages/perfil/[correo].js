@@ -78,7 +78,7 @@ function PerfilAgencia({data}) {
             </Head>
             <Box minHeight="64px"></Box>
             <Container maxWidth="md">
-                <Box display="flex" justifyContent="center" alignItems="center" marginTop={2} marginBottom={3}>
+                <Box display="flex" justifyContent="center" alignItems="center" marginTop={2} marginBottom={3} textAlign="center">
                     <Typography variant="h3" color="secondary">Datos de Agencia</Typography>
                 </Box>
                 <Paper elevation={5}>
@@ -178,7 +178,7 @@ function PerfilCliente({data}) {
             </Head>
             <Box minHeight="64px"></Box>
             <Container maxWidth="md">
-                <Box display="flex" justifyContent="center" alignItems="center" marginTop={2} marginBottom={3}>
+                <Box display="flex" justifyContent="center" alignItems="center" marginTop={2} marginBottom={3} textAlign="center">
                     <Typography variant="h3" color="secondary">Datos de Cliente</Typography>
                 </Box>
                 <Paper elevation={5}>
