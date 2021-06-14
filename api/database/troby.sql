@@ -554,7 +554,7 @@ CREATE TABLE `servicios` (
   PRIMARY KEY (`idservicios`),
   KEY `fk_servicios_tipo_servicios1_idx` (`tipo_servicios_idtipo_servicios`),
   CONSTRAINT `fk_servicios_tipo_servicios1` FOREIGN KEY (`tipo_servicios_idtipo_servicios`) REFERENCES `tipo_servicios` (`idtipo_servicios`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -563,7 +563,7 @@ CREATE TABLE `servicios` (
 
 LOCK TABLES `servicios` WRITE;
 /*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
-INSERT INTO `servicios` VALUES (1,'la mejor purificadora de lo mejor en servicios',1),(2,'la mejor purificadora de lo mejor en servicios',1),(3,'la mejor purificadora de lo mejor en servicios',1),(4,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(5,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(6,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(7,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(8,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(9,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(10,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(11,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más! ',3),(12,'Jardinería Gomez le otorga el mejor servicio de Jardinería de Tulum!\nTel: 5578305648',6),(13,'La Plomeria los cachos esta para tí para arreglar cualquier escusado.\nTel. 5573954978',2),(14,'La Plomeria los cachos esta para tí para arreglar cualquier escusado.\nTel. 5573954978',2);
+INSERT INTO `servicios` VALUES (1,'la mejor purificadora de lo mejor en servicios',1),(2,'la mejor purificadora de lo mejor en servicios',1),(3,'la mejor purificadora de lo mejor en servicios',1),(4,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(5,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(6,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(7,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(8,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(9,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(10,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más!',3),(11,'Florería Don Magos le otorga todo tipo de claveles, rosas, tulipanes y mucho mucho más! ',3),(12,'Jardinería Gomez le otorga el mejor servicio de Jardinería de Tulum!\nTel: 5578305648',6),(13,'La Plomeria los cachos esta para tí para arreglar cualquier escusado.\nTel. 5573954978',2),(14,'La Plomeria los cachos esta para tí para arreglar cualquier escusado.\nTel. 5573954978',2),(15,'Servicio \"El Electrocutor\" trae para ti los mejores arreglos a tu conexión de electricidad! ',4),(16,'Ferretería \"El Ferras\" es tu mejor opción a acudir en esta zona.\nTel. 55-7893-4569',1),(17,'Jardinería \"KukiGarden\" te deja tus jardines dignos de la realeza! \nLlama a 55-6924-6724 y vamos!',6),(18,'Ferretería \"El Abasolo\", la mejor ferretería de San Joanuco! \nLlama a 553856592',1),(19,'¿Te navajearon cerca de la central?, Llama a 5532352356 y nosotros te curamos!',8),(20,'¿Te robaron tus órganos en el otro hospital?, Llama a 5535673467 y nosotros te los reponemos!',8),(21,'Veterinaria \"El wawa\" trae para ti los mejores servicios de Veterinaria de la zona!',7),(22,'Florería \"El Leal\" te ofrece las mejores rosas para tus enamoradas! Llama a 55-2464-2446!',3),(23,'Soy Juan \"el Mecánico\" y te vengo a reparar el carburador si lo necesitas.\nLlama al 55-2394-3244',5),(24,'Florería \"La Fresa\" para que le envíes rosas a tu novia Fresa de la Polanco!',3),(25,'Hospital \"El Mala Copa\" para ayudarte a curar la sobredosis que te diste en los bares del la Polanco',8);
 /*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -718,7 +718,7 @@ CREATE TABLE `zona_servicio` (
 
 LOCK TABLES `zona_servicio` WRITE;
 /*!40000 ALTER TABLE `zona_servicio` DISABLE KEYS */;
-INSERT INTO `zona_servicio` VALUES (3,560),(11,560),(12,6793),(14,7120);
+INSERT INTO `zona_servicio` VALUES (3,560),(11,560),(12,6793),(14,7120),(15,7120),(16,7120),(17,7120),(18,7120),(19,7120),(20,7120),(21,7120),(22,7120),(23,7120),(24,11560),(25,11560);
 /*!40000 ALTER TABLE `zona_servicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -806,4 +806,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-14  0:12:32
+-- Dump completed on 2021-06-14 17:56:12
