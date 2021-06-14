@@ -572,21 +572,96 @@ const verServiciosZona = async(req,resp) =>{
     })
         
     }
-
 }
 
-const getServicios = async(req,resp = response) =>{
+const getServicios = async(req, resp) =>{
+    try {
+        let listServs = await conn.query('SELECT servicio FROM tipo_servicios;');
 
-    const servicios = [];
-    const data = await conn.query('select servicio from tipo_servicios');
-    for(i of data){
-        servicios.push(i.servicio);
+        return res.status(200).json({
+            ok: true,
+            listServs
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: "No se completo la petición"
+        })  
     }
-    
-    return resp.status(200).json({servicios});
-
 }
 
+//POST elimiar de inmueble agencia
+const eliminarInmueble = async(req, res) => {
+    console.log("Ejecutando eliminarInmueble...");
+    try {
+        const { inmueble_id } = req.params.inmueble_id;
+
+        const delete_favoritos = "SELECT * FROM favoritos WHERE inmueble_idinmuebe = ?;";
+        const delete_ofertas_agencias = "SELECT * FROM oferta_agencias WHERE inmueble_idinmuebe = ?;";
+        const delete_imagenes = "DELETE FROM idimagen WHERE idimagen IN (" +
+                "SELECT * FROM ( SELECT imagenes_idimagen WHERE inmueble_idinmuebe = ? )" +
+                ") AS query );";
+        const delete_imagenes_inmueble = "SELECT * FROM imagenes_inmueble WHERE inmueble_idinmuebe = ?;";
+        const delete_sugerencias = "SELECT * FROM oferta_sugerencias WHERE inmueble_idinmuebe = ?;";
+        const delete_inmueble = "SELECT * FROM inmueble WHERE idinmueble = ?;";
+
+        //Deletes en orden por prioridad
+        await conn.query(delete_favoritos, [inmueble_id]);
+        await conn.query(delete_ofertas_agencias, [inmueble_id]);
+        await conn.query(delete_imagenes, [inmueble_id]);
+        await conn.query(delete_imagenes_inmueble, [inmueble_id]);
+        await conn.query(delete_sugerencias, [inmueble_id]);
+        await conn.query(delete_inmueble, [inmueble_id]);
+
+        //TODO: Eliminar imagenes?
+
+        console.log("Inmueble eliminado");
+        return res.json({
+            mensaje:"Inmueble eliminado con exito"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'No se completo la petició'
+        })
+    }
+}
+
+const editarInmueble = async(req, res) => {
+    console.log("Ejecutando editarInmueble...");
+    try {
+         /*
+            Datos a editar
+            * Descripción
+            * Características
+            * Imágenes?
+            * Precio
+            * Propietario
+            * tipo_transaccion
+        */
+        const { inmueble_id, descripcion, caracteristicas, tipo_transaccion, precio, propietario } = req.body;
+        const query = "SELECT idtipo_transaccion FROM tipo_transaccion WHERE transaccion = ?;";
+        const update = "UPDATE inmueble SET descripcion = ?, caracteristicas = ?, tipo_transaccion_idtipo_transaccion = ?, precio = ?, propietario = ? WHERE idinmueble = ?;";
+
+        const object = await conn.query(query, [tipo_transaccion]);
+        const idtipo_transaccion = object[0].idtipo_transaccion;
+
+        await conn.query(update, [descripcion, caracteristicas, idtipo_transaccion, precio, propietario, inmueble_id]);
+
+        console.log("Inmueble editado");
+        return res.json({
+            mensaje:"Inmueble editado con exito"
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'No se completo la petición'
+        })
+    }
+}
 
 const verPapelera = async(req,resp=response) =>{
     const correo = req.params.correo;
@@ -637,8 +712,9 @@ module.exports = {
     verServiciosZona,
     getServicios,
     verPapelera,
-    eliminarDePapelera
+    eliminarDePapelera,
+    eliminarInmueble,
+    editarInmueble
     
-
     
 }

@@ -2,7 +2,8 @@ const express = require('express');
 const { getAllInmuebles, inmueblesCliente, inmueblesAgencia,
  inmuebleUnitario, getInmuebles, getFavoritos,agregarFavorito, 
  eliminarFavorito,registroInmuebleCliente, registroInmuebleAgencia, 
- registrarServicioZona, verServiciosZona, getServicios, verPapelera, eliminarDePapelera} = require('../controllers/inmuebleController');
+ registrarServicioZona, verServiciosZona, getServicios, verPapelera, 
+ eliminarDePapelera, eliminarInmueble, editarInmueble} = require('../controllers/inmuebleController');
 const { agendarVisita, historialVisitas } = require('../controllers/visitaController');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const router = express.Router();
@@ -25,7 +26,7 @@ router.get('/inmuebles',getAllInmuebles);
 router.get('/inmueblesCliente/:correo',inmueblesCliente);
 router.get('/inmueblesAgencia/:correo',inmueblesAgencia);
 router.get('/unitario/:inmueble_id', inmuebleUnitario); // ?inmueble_id=1
-router.get('/:propietario/:texto/:page', getInmuebles); //* traer todo
+router.get('/buscar/:propietario/:texto/:page', getInmuebles); //* traer todo
 //valida si hay un token,si no rechaza la operacion
 router.get('/favoritos/:correo',validarJWT,getFavoritos);
 router.post('/agregarFavorito',validarJWT,agregarFavorito);
@@ -51,4 +52,7 @@ router.get('/servicios',getServicios);
 
 router.get('/verPapalera/:correo',verPapelera);
 router.post('/eliminarDePapelera',eliminarDePapelera);
+
+router.post("/inmueble/editar", editarInmueble);
+router.post("/inmueble/eliminar", eliminarInmueble);
 module.exports = router
