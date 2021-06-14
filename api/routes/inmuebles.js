@@ -54,5 +54,5 @@ router.get('/verPapalera/:correo',verPapelera);
 router.post('/elimarDePapelera',eliminarDePapelera);
 
 router.post("/inmueble/editar", editarInmueble);
-router.post("/inmueble/eliminar", eliminarInmueble);
+router.post("/inmueble/eliminar/:inmueble_id", eliminarInmueble);
 module.exports = router
