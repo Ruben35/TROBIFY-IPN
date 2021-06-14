@@ -26,7 +26,7 @@ router.get('/inmuebles',getAllInmuebles);
 router.get('/inmueblesCliente/:correo',inmueblesCliente);
 router.get('/inmueblesAgencia/:correo',inmueblesAgencia);
 router.get('/unitario/:inmueble_id', inmuebleUnitario); // ?inmueble_id=1
-router.get('/:propietario/:texto/:page', getInmuebles); //* traer todo
+router.get('/buscar/:propietario/:texto/:page', getInmuebles); //* traer todo
 //valida si hay un token,si no rechaza la operacion
 router.get('/favoritos/:correo',validarJWT,getFavoritos);
 router.post('/agregarFavorito',validarJWT,agregarFavorito);
