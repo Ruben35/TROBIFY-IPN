@@ -597,18 +597,24 @@ const eliminarInmueble = async(req, res) => {
     try {
         const { inmueble_id } = req.params.inmueble_id;
 
-        const delete_favoritos = "SELECT * FROM favoritos WHERE inmueble_idinmuebe = ?;";
-        const delete_ofertas_agencias = "SELECT * FROM oferta_agencias WHERE inmueble_idinmuebe = ?;";
+        const delete_papelera = "DELETE FROM papalera_favoritos WHERE inmueble_idinmueble = ?;";
+        const delete_favoritos = "DELETE FROM favoritos WHERE inmueble_idinmueble = ?;";
+        const delete_visitas = "DELETE FROM visitas WHERE inmueble_idinmueble = ?;";
+        const delete_ofertas_agencias = "DELETE FROM oferta_agencias WHERE inmueble_idinmueble = ?;";
+        const delete_ofertas_cliente = "DELETE FROM oferta_cliente WHERE inmueble_idinmueble = ?;";
         const delete_imagenes = "DELETE FROM idimagen WHERE idimagen IN (" +
-                "SELECT * FROM ( SELECT imagenes_idimagen WHERE inmueble_idinmuebe = ? )" +
+                "SELECT * FROM ( SELECT imagenes_idimagen WHERE inmueble_idinmueble = ? )" +
                 ") AS query );";
-        const delete_imagenes_inmueble = "SELECT * FROM imagenes_inmueble WHERE inmueble_idinmuebe = ?;";
-        const delete_sugerencias = "SELECT * FROM oferta_sugerencias WHERE inmueble_idinmuebe = ?;";
-        const delete_inmueble = "SELECT * FROM inmueble WHERE idinmueble = ?;";
+        const delete_imagenes_inmueble = "DELETE FROM imagenes_inmueble WHERE inmueble_idinmueble = ?;";
+        const delete_sugerencias = "DELETE FROM oferta_sugerencias WHERE inmueble_idinmueble = ?;";
+        const delete_inmueble = "DELETE FROM inmueble WHERE idinmueble = ?;";
 
         //Deletes en orden por prioridad
+        await conn.query(delete_papelera, [inmueble_id]);
         await conn.query(delete_favoritos, [inmueble_id]);
+        await conn.query(delete_visitas, [inmueble_id]);
         await conn.query(delete_ofertas_agencias, [inmueble_id]);
+        await conn.query(delete_ofertas_cliente, [inmueble_id]);
         await conn.query(delete_imagenes, [inmueble_id]);
         await conn.query(delete_imagenes_inmueble, [inmueble_id]);
         await conn.query(delete_sugerencias, [inmueble_id]);
@@ -640,15 +646,21 @@ const editarInmueble = async(req, res) => {
             * Precio
             * Propietario
             * tipo_transaccion
+            * superficie
+            * nBanios
+            * nGarage
+            * nRecamaras
         */
-        const { inmueble_id, descripcion, caracteristicas, tipo_transaccion, precio, propietario } = req.body;
+        const { inmueble_id, descripcion, caracteristicas, tipo_transaccion, precio, propietario, superficie, nBanios, nGarage, nRecamaras } = req.body;
         const query = "SELECT idtipo_transaccion FROM tipo_transaccion WHERE transaccion = ?;";
-        const update = "UPDATE inmueble SET descripcion = ?, caracteristicas = ?, tipo_transaccion_idtipo_transaccion = ?, precio = ?, propietario = ? WHERE idinmueble = ?;";
+        const update = "UPDATE inmueble SET descripcion = ?, caracteristicas = ?, tipo_transaccion_idtipo_transaccion = ?, precio = ?, propietario = ?, "
+            + "superficie = ?, nBanios = ?, nGarage = ?, nRecamaras = ? "
+            + "WHERE idinmueble = ?;";
 
         const object = await conn.query(query, [tipo_transaccion]);
         const idtipo_transaccion = object[0].idtipo_transaccion;
 
-        await conn.query(update, [descripcion, caracteristicas, idtipo_transaccion, precio, propietario, inmueble_id]);
+        await conn.query(update, [descripcion, caracteristicas, idtipo_transaccion, precio, propietario, superficie, nBanios, nGarage, nRecamaras, inmueble_id]);
 
         console.log("Inmueble editado");
         return res.json({
