@@ -9,6 +9,7 @@ module.exports = {
 
 
 //base con registros
+<<<<<<< HEAD
 // module.exports = {
 //     database:{
 //         host:'localhost',
@@ -17,3 +18,13 @@ module.exports = {
 //         database:'pruebas'
 //     }
 // }
+=======
+/*module.exports = {
+    database:{
+        host:'localhost',
+        user:'root',
+        password:'password',
+        database:'pruebas'
+    }
+}*/
+>>>>>>> backend
