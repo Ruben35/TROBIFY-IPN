@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { Box, Button, Container, Grid, Link, ThemeProvider, Typography } from '@material-ui/core';
+import { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -10,6 +11,7 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import { useRouter } from 'next/router';
 import useMediaQuery from '../../utils/CustomHooks'
+import YesNoDialog from '../../components/basic/YesNoDialog';
 import cookies from 'next-cookies';
 import axios from 'axios';
 
@@ -35,42 +37,62 @@ export default function gestion( { dataInmuebles } ) {
         const img= (imgURL!="" && imgURL!=undefined)?process.env.SERVER_URL+"\\"+imgURL:"/img/landing/carrusel0.jpg";
         const router = useRouter();
 
-        return (<Card className={classes.root}>
-            <CardActionArea onClick={()=> router.push(`/inmuebles/${idInmueble}`)}>
-                <CardMedia
-                    component="img"
-                    alt="Titulo de Inmueble"
-                    height="140"
-                    image={img}
-                    title="Titulo de Inmueble"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {title?title:"Titulo del Inmueble"} </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                    {description?
-                    (description.length>200)?description.substring(0,197)+"..."
-                        :description
-                    :"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero eros."}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <Link href={`/inmuebles/${idInmueble}`}>
-                    <Button size="large" color="primary" variant="outlined">
-                        Ver
+        const [openDialog, setOpenDialog] = useState(false);
+
+        const handleYesDialog = async () => {
+
+
+            setOpenDialog(false);
+        }
+
+        return (
+            <>
+            <Card className={classes.root}>
+                <CardActionArea onClick={()=> router.push(`/inmuebles/${idInmueble}`)}>
+                    <CardMedia
+                        component="img"
+                        alt="Titulo de Inmueble"
+                        height="140"
+                        image={img}
+                        title="Titulo de Inmueble"
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {title?title:"Titulo del Inmueble"} </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                        {description?
+                        (description.length>200)?description.substring(0,197)+"..."
+                            :description
+                        :"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet consectetur lectus. Vestibulum nulla ipsum, vestibulum sit amet lacus sollicitudin, laoreet suscipit lorem. Nullam ac libero eros."}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    <Link href={`/inmuebles/${idInmueble}`}>
+                        <Button size="large" color="primary" variant="outlined">
+                            Ver
+                        </Button>
+                    </Link>
+                    <Button size="large" color="secondary" variant="outlined">
+                        Editar
                     </Button>
-                </Link>
-                <Button size="large" color="secondary" variant="outlined">
-                    Editar
-                </Button>
-                <div className={classes.button}>
-                    <IconButton className={classes.colorRed}>
-                        <DeleteOutlinedIcon />
-                    </IconButton>
-                </div>
-            </CardActions>
-        </Card>);
+                    <div className={classes.button}>
+                        <IconButton className={classes.colorRed} onClick={()=> setOpenDialog(true)}>
+                            <DeleteOutlinedIcon />
+                        </IconButton>
+                    </div>
+                </CardActions>
+            </Card>
+            <YesNoDialog
+                title={"Eliminar Inmueble..."}
+                description={`¿Seguro que quieres eliminar el inmueble "${title}"?, una vez realizado esto, los clientes no podran encontrar tu inmueble ni agendar visitas.`}
+                openDialog={openDialog}
+                handleYes={handleYesDialog}
+                handleNo={() => setOpenDialog(false)}
+                yesText="Sí, seguro!"
+            />
+            </>
+        );
     }
     return (
         <>
