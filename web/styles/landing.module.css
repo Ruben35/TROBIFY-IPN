@@ -1,0 +1,62 @@
+.hero_image{
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    opacity: 100%;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    -webkit-transition: background-image 2s ease-in-out;
+    transition: background-image 2s ease-in-out;
+    margin-bottom: 20px;
+}
+
+.hero_container{
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    user-select: none;
+    padding: 10px;
+}
+
+.hero_image:hover{
+    background-color: aliceblue;
+}
+
+.hero_callToAction{
+    margin-top: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.whatIsSection{
+    min-height: 400px;
+}
+
+.whatIsSection_question{
+    margin-left: 20px;
+}
+
+.whatIsSection_Paper{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 30px;
+    min-height: 400px;
+}
+
+.whatIsSection_Image{
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+    text-align: center;
+}
+.whatIsSection_questionCenter{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.finalbutton{
+    margin: 10px;
+    min-width: 250px;
+}

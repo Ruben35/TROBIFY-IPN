@@ -1,0 +1,19 @@
+//procedimiento almacenado endpoint 1
+
+DELIMITER //
+CREATE PROCEDURE getInmobiliarios()
+     BEGIN
+     SELECT i.titulo , i.descripcion , i.caracteristicas ,i.precio , i.status , i.superficie , i.nGarage , i.nRecamaras , i.nBanios , i.propietario , i.idinmueble ,  t.transaccion ,d.calle , d.numExt, d.numInt,z.colonia, z.ciudad, z.estado , z.cp FROM inmueble i, tipo_transaccion t, direcciones d,  zonas z
+     WHERE t.idtipo_transaccion = i.tipo_transaccion_idtipo_transaccion and d.iddireccion  =  i.direcciones_iddireccion and  z.cp = d.zonas_cp;
+END //
+
+
+//procedimiento almacenado endpoint 2
+
+DELIMITER //
+CREATE PROCEDURE getInmuebleByCliente(IN idinmueble VARCHAR(80)) 
+BEGIN 
+SELECT i.titulo , i.descripcion , i.caracteristicas ,i.precio , i.status , i.superficie , i.nGarage , i.nRecamaras , i.nBanios , i.propietario , i.idinmueble ,  t.transaccion ,d.calle , d.numExt , d.numInt,z.colonia, z.ciudad, z.estado , z.cp 
+FROM inmueble i, tipo_transaccion t, direcciones d,  zonas z 
+WHERE  t.idtipo_transaccion = i.tipo_transaccion_idtipo_transaccion and d.iddireccion  =  i.direcciones_iddireccion and  z.cp = d.zonas_cp and  i.idinmueble  = idinmueble; 
+END//
