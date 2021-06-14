@@ -156,7 +156,6 @@ export default function verInmueble( { inmuebleData, servicesData } ){
     }
 
     const handleFavorite= ()=>{
-        console.log(isLogged)
         if(!isLogged){
             setMessageSnack("session");
             setOpenSnack(true);
@@ -175,6 +174,20 @@ export default function verInmueble( { inmuebleData, servicesData } ){
           }
         }
       }
+    
+    const handleVisita= () => {
+        if(!isLogged){
+            setMessageSnack("session");
+            setOpenSnack(true);
+        }
+        else if(userType!="cliente"){
+            setMessageSnack("type")
+            setOpenSnack(true);
+        }
+        else{
+            router.push(`/registro/visita/${idInmueble}`)
+        }
+    }
 
     return (
         <>
@@ -353,7 +366,7 @@ export default function verInmueble( { inmuebleData, servicesData } ){
                                             </Button>
                                         </Link>
                                         <br/>
-                                        <Button startIcon={<WatchLaterRoundedIcon/>} variant="contained" color="primary">
+                                        <Button startIcon={<WatchLaterRoundedIcon/>} onClick={handleVisita} variant="contained" color="primary">
                                             Agendar Visita
                                         </Button>
                                         <br/>

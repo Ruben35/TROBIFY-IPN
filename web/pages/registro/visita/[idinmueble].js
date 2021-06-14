@@ -4,17 +4,19 @@ import Box from '@material-ui/core/Box'
 import { useRef, useState } from 'react';
 import React from 'react';
 import Head from 'next/head';
-import OkDialog from '../../components/basic/OkDialog';
+import OkDialog from '../../../components/basic/OkDialog';
 import { useRouter } from 'next/router';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import es from 'date-fns/locale/es';
-import useUser from '../../utils/UserHook';
+import useUser from '../../../utils/UserHook';
+import cookies from 'next-cookies'
+import axios from 'axios'
 registerLocale('es', es)
 
 
-export default function RegistroVisita() {
+export default function RegistroVisita( { inmuebleData } ) {
 
     return (
         <>
@@ -28,7 +30,7 @@ export default function RegistroVisita() {
                 </Box>
                 <Paper elevation={3}>
                     <Box padding={5}>
-                        <Form />
+                        <Form inmuebleId={inmuebleData.idinmueble} inmuebleTitulo={inmuebleData.titulo} propietario={inmuebleData.propietario}/>
                     </Box>
                 </Paper>
             </Container>
@@ -43,12 +45,10 @@ const DatosHORA = ({handleStartDate, startDate}) => {
     );
 };
 
-const Form = () => {
+const Form = ({inmuebleId, inmuebleTitulo, propietario}) => {
     const router = useRouter();
-    const {} = useUser();
+    const { userEmail } = useUser();
     //Form values
-    const [email, setEmail] = useState("solovino");
-    const [inmueble, setInmueble] = useState("SuperInmueble");
 
     //Aux States
     const [open, setOpen] = useState(false);
@@ -56,8 +56,22 @@ const Form = () => {
     const [successDialog, setSuccessDialog] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
 
-    const handleSubmit = (e) => {
-       console.log(e);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try{
+            const res= await axios({
+                method: "post",
+                url:  process.env.SERVER_URL+"/inmueble/visita/agendar",
+                data: {
+                    fecha_visita:startDate.toLocaleString("es-US"),
+                    inmueble_id:inmuebleId,
+                    cliente_correo: userEmail
+                }
+            })
+            setSuccessDialog(true);
+        }catch(er){
+            setAlertMessage("Error en servidor");
+        }
     }
 
     const handleChangeDate = (date) =>{
@@ -88,7 +102,7 @@ const Form = () => {
             <Divider />
             <Box margin={3}>
                 <Grid container spacing={5} justify="center" >
-                    <Grid item> <p>Se agendará una visita a <b> {inmueble}</b> para el siguiente correo : <b>{email}</b></p></Grid>
+                    <Grid item> <p>Se agendará una visita a <b> "{inmuebleTitulo}"</b> para el siguiente correo : <b>{userEmail}</b></p></Grid>
                 </Grid>
             </Box>
             <Typography variant="h5">Registro</Typography>
@@ -117,9 +131,42 @@ const Form = () => {
                 </Alert>
             </Snackbar>
             <OkDialog open={successDialog} 
-                    title={`¡Registro Exitoso Agencia ${name}!`}
-                    message={`Hemos enviado un correo a "${email}" para poder confirmar tu cuenta.`}
+                    title={`¡Visita Agendada Exitosamente!`}
+                    message={`Tu visita ha sido registrada, el propietario "${propietario}" se comunicará contigo para confirmar la cita.`}
                     onOk={handleOnOk}/>
         </form>
     );
+}
+
+export async function getServerSideProps(context) {
+    const jwt=cookies(context).jwt
+    const type=cookies(context).type;
+    if(jwt && type==="cliente"){ //logged and client?
+        const idInmueble=context.query.idinmueble;
+        try{
+            const resInmuebleUnit= await axios.get(process.env.SERVER_URL+'/inmueble/unitario/'+idInmueble);
+            if(!resInmuebleUnit.data.ok){
+                throw new Error("No existe el inmueble");
+            }
+            const inmuebleData= resInmuebleUnit.data.data;
+
+            return {
+                props: { inmuebleData }
+            }
+        }catch(er){
+            const { res } = context;
+            res.setHeader("location", "/404");
+            res.statusCode = 302;
+            res.end();
+        }
+    }else{
+        const { res } = context;
+        res.setHeader("location", "/");
+        res.statusCode = 302;
+        res.end();
+    }
+
+    return {
+        props: {}
+    }
 }

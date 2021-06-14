@@ -11,7 +11,7 @@ import { FormHelperText } from '@material-ui/core';
 import { useRouter } from 'next/router';
 
 export default function RegistrarServcio( { servicios } ){
-    console.log(servicios);
+
     return(
         <>
             <Head>
