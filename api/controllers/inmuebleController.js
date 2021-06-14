@@ -676,6 +676,7 @@ const editarInmueble = async(req, res) => {
 }
 
 const verPapelera = async(req,resp=response) =>{
+    
     const correo = req.params.correo;
     const data  = await conn.query('select i.idinmueble from papelera_favoritos p ,inmueble i where p.inmueble_idinmueble = i.idinmueble and p.cliente_correo = ?',[correo]);
     return resp.json({
