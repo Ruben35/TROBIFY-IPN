@@ -55,4 +55,5 @@ router.post('/elimarDePapelera',eliminarDePapelera);
 
 router.post("/inmueble/editar", editarInmueble);
 router.post("/eliminar/:inmueble_id", eliminarInmueble);
+
 module.exports = router
