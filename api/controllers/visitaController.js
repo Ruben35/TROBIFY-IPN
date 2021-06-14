@@ -68,7 +68,7 @@ const historialVisitas = async(req,res) =>{
 
         for(i of im){
 
-            console.log(i.inmueble_idinmueble);
+            //console.log(i.inmueble_idinmueble);
 
             let data = await conn.query('select * from visitas v where v.inmueble_idinmueble =?',[i.inmueble_idinmueble]);
             if(Object.keys(data).length != 0){
