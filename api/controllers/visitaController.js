@@ -1,6 +1,5 @@
 const { response } = require('express');
 const conn = require('../bd');
-const uniqid = require('uniqid');
 
 const agendarVisita = async(req, res) =>{
     try{
