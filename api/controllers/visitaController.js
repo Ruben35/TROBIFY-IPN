@@ -68,8 +68,9 @@ const historialVisitas = async(req,res) =>{
 
         for(i of im){
 
-            const res = await conn.query('select i.titulo,c.nombre,c.apPaterno,c.correo,v.fecha,v.status from inmueble i, oferta_agencia ofa, cliente c ,visitas v where i.idinmueble = ofa.inmueble_idinmueble and v.cliente_correo =?',[correo]);
+            const res = await conn.query('select i.titulo,c.nombre,c.apPaterno,c.correo,v.fecha,v.status from inmueble i, oferta_cliente ofc, cliente c ,visitas v where i.idinmueble = ofc.inmueble_idinmueble and c.correo = v.cliente_correo');
             respuesta.push(res[0]);
+                   
 
         }
 
