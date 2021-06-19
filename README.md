@@ -13,3 +13,11 @@ Para poder pasar el contenido de una rama a otra se usa el comando: `$ git merge
 Para poder enviar todos los cambios (commits y merge) usar el comando `$ git push --all -u`
 
 Para pasar de la rama **integration** a **main** realizar un _pull request_.
+
+
+# Web 📦
+
+![image](./screens/1.png)
+![image](./screens/2.png)
+![image](./screens/3.png)
+![image](./screens/4.png)
